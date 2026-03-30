@@ -1,21 +1,22 @@
 #include <iostream>
 #include <queue>
+#include <vector>
 using namespace std;
 
-const int N = 1e5 + 5;
+const int N = 150 * 70 + 5;
 struct Trie {
     int son[26];
     int fail;
     int exist;
-    bool visited;
-
 } t[N];
+vector<string> pattern;
+int endnode[N];
 
 // 节点编号
 int cnt;
 
 // trie普通构建
-void insert(const char* s) {
+void insert(const char* s, int idx) {
     int u = 0;
     for (int i = 0; s[i]; ++i) {
         int c = s[i] - 'a';
@@ -24,7 +25,7 @@ void insert(const char* s) {
         }
         u = t[u].son[c];
     }
-    ++t[u].exist;
+    endnode[idx] = u;
 }
 
 // AC自动机构建
@@ -50,45 +51,58 @@ void build() {
     }
 }
 
-// 一次匹配，不需要visited标识
-int query_once(const char* s) {
-    int u   = 0;
-    int ret = 0;  // 匹配数
+// 匹配
+void query(const char* s) {
+    int u = 0;
+
     for (int i = 0; s[i]; ++i) {
         int c = s[i] - 'a';
 
         u = t[u].son[c];
-        for (int j = u; j && t[j].exist != -1; j = t[j].fail) {
-            ret += t[j].exist;
-            t[j].exist = -1;  // exist=-1指已经询问过了，但这种方法只能询问一次，若想多次询问则需要构建visited状态
+        for (int j = u; j; j = t[j].fail) {
+            t[j].exist++;
         }
     }
-    return ret;
-}
-// 多次匹配
-int query_multi(const char* s) {
-    // 清空状态
-    for (int i = 0; i <= cnt; ++i) {
-        t[i].visited = false;
-    }
-    // 再匹配
-    int u   = 0;
-    int ret = 0;  // 匹配数
-    for (int i = 0; s[i]; ++i) {
-        int c = s[i] - 'a';
-
-        u = t[u].son[c];
-        for (int j = u; j && !t[j].visited; j = t[j].fail) {
-            ret += t[j].exist;
-            t[j].visited = true;
-        }
-    }
-    return ret;
 }
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
+    while (1) {
+        int n;
+        cin >> n;
+        if (n) {
+            for (int i = 0; i <= cnt; ++i) {
+                t[i] = {};
+            }
+            cnt = 0;
+        }
+        else {
+            break;
+        }
+        pattern.resize(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> pattern[i];
+            insert(pattern[i].c_str(), i);
+        }
+        build();
+
+        string s;
+        cin >> s;
+        query(s.c_str());
+
+        int max_cnt = 0;
+        for (int i = 0; i < n; ++i) {
+
+            max_cnt = max(max_cnt, t[endnode[i]].exist);
+        }
+        cout << max_cnt << '\n';
+        for (int i = 0; i < n; ++i) {
+            if (max_cnt == t[endnode[i]].exist) {
+                cout << pattern[i] << '\n';
+            }
+        }
+    }
     return 0;
 }

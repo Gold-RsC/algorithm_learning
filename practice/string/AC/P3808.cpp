@@ -2,12 +2,11 @@
 #include <queue>
 using namespace std;
 
-const int N = 1e5 + 5;
+const int N = 1e6 + 5;
 struct Trie {
     int son[26];
     int fail;
     int exist;
-    bool visited;
 
 } t[N];
 
@@ -50,8 +49,8 @@ void build() {
     }
 }
 
-// 一次匹配，不需要visited标识
-int query_once(const char* s) {
+// 匹配
+int query(const char* s) {
     int u   = 0;
     int ret = 0;  // 匹配数
     for (int i = 0; s[i]; ++i) {
@@ -65,30 +64,22 @@ int query_once(const char* s) {
     }
     return ret;
 }
-// 多次匹配
-int query_multi(const char* s) {
-    // 清空状态
-    for (int i = 0; i <= cnt; ++i) {
-        t[i].visited = false;
-    }
-    // 再匹配
-    int u   = 0;
-    int ret = 0;  // 匹配数
-    for (int i = 0; s[i]; ++i) {
-        int c = s[i] - 'a';
-
-        u = t[u].son[c];
-        for (int j = u; j && !t[j].visited; j = t[j].fail) {
-            ret += t[j].exist;
-            t[j].visited = true;
-        }
-    }
-    return ret;
-}
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
+    int n;
+    cin >> n;
+    while (n--) {
+        string s;
+        cin >> s;
+        insert(s.c_str());
+    }
+    build();
+
+    string s;
+    cin >> s;
+    cout << query(s.c_str());
     return 0;
 }
