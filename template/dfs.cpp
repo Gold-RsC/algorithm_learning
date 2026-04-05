@@ -1,0 +1,34 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
+#include <numeric>
+#include <string>
+#include <cmath>
+using namespace std;
+
+vector<bool> visited;
+void dfs(int x) {
+    if (visited[x]) {
+        return;
+    }
+    visited[x] = true;
+
+    if (/*something*/) {
+        dfs(/*something*/);
+    }
+}
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+
+    return 0;
+}
