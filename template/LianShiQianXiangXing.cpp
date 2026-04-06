@@ -23,11 +23,13 @@ vector<Edge> edge;
 
 vector<int> head;  // 头节点的初始坐标
 
-vector<int> head_list;  // 可要可不要，头节点的集合
+vector<bool> isnt_root;
 
 void add(int u, int v, int w) {
     edge.push_back({head[u], v, w});
     head[u] = edge.size() - 1;
+
+    isnt_root[v] = true;
 }
 
 bool find_edge(int u, int v) {
@@ -49,6 +51,8 @@ void dfs(int u) {
         dfs(edge[i].to);
     }
 }
+// 如果节点的情况未知
+vector<int> head_list;  // 头节点的集合
 vector<int> find_root() {
     vector<int> in_degree(head.size(), 0);
 
@@ -63,6 +67,14 @@ vector<int> find_root() {
         }
     }
     return root_list;
+}
+// 如果节点的情况已知
+void do_root() {
+    for (int u = 1; u <= n; ++u) {
+        if (!isnt_root[u]) {
+            dfs(u);
+        }
+    }
 }
 signed main() {
     ios::sync_with_stdio(false);

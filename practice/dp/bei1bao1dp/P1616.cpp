@@ -5,7 +5,7 @@ using namespace std;
 int t, m;
 int tm[10005];
 int value[10005];
-int main() {
+signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
