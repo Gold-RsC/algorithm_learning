@@ -10,62 +10,90 @@ struct Interval {
     int root;         // 对应的节点
 };
 
+#define MID                                                \
+    interval.left + (interval.right - interval.left) / 2
+#define LEFT_INTERVAL                                      \
+    {interval.left, mid, interval.root * 2}
+#define RIGHT_INTERVAL                                     \
+    {mid + 1, interval.right, interval.root * 2 + 1}
 void build(Interval interval) {
     if (interval.left == interval.right) {
         d[interval.root] = a[interval.left];
         return;
     }
-    int mid = interval.left + (interval.right - interval.left) / 2;
-    build({interval.left, mid, interval.root * 2});
-    build({mid + 1, interval.right, interval.root * 2 + 1});
+    int mid = MID;
+    build(LEFT_INTERVAL);
+    build(RIGHT_INTERVAL);
     // 求和
-    d[interval.root] = d[interval.root * 2] + d[interval.root * 2 + 1];
+    d[interval.root] =
+        d[interval.root * 2] + d[interval.root * 2 + 1];
 }
 
 void push_down(Interval interval) {
-    if (lazy[interval.root] && interval.left < interval.right) {
-        int mid = interval.left + (interval.right - interval.left) / 2;
-        d[interval.root * 2] += lazy[interval.root] * (mid - interval.left + 1);
-        d[interval.root * 2 + 1] += lazy[interval.root] * (interval.right - mid);
+    if (lazy[interval.root] &&
+        interval.left < interval.right) {
+        int mid = MID;
+        d[interval.root * 2] +=
+            lazy[interval.root] * (mid - interval.left + 1);
+        d[interval.root * 2 + 1] +=
+            lazy[interval.root] * (interval.right - mid);
 
         lazy[interval.root * 2] += lazy[interval.root];
         lazy[interval.root * 2 + 1] += lazy[interval.root];
         lazy[interval.root] = 0;
     }
 }
-int query_sum(int find_left, int find_right, Interval interval) {
-    if (find_left <= interval.left && interval.right <= find_right) {
+int query_sum(int find_left,
+              int find_right,
+              Interval interval) {
+    if (find_left <= interval.left &&
+        interval.right <= find_right) {
         return d[interval.root];
     }
     push_down(interval);
 
-    int mid = interval.left + (interval.right - interval.left) / 2;
+    int mid = MID;
     int sum = 0;
     if (find_left <= mid) {
-        sum += query_sum(find_left, find_right, {interval.left, mid, interval.root * 2});
+        sum +=
+            query_sum(find_left, find_right, LEFT_INTERVAL);
     }
     if (find_right > mid) {
-        sum += query_sum(find_left, find_right, {mid + 1, interval.right, interval.root * 2 + 1});
+        sum += query_sum(
+            find_left, find_right, RIGHT_INTERVAL);
     }
     return sum;
 }
 
-void update(int update_left, int update_right, int delta_val, Interval interval) {
-    if (update_left <= interval.left && interval.right <= update_right) {
-        d[interval.root] += (interval.right - interval.left + 1) * delta_val;
+void update(int update_left,
+            int update_right,
+            int delta_val,
+            Interval interval) {
+    if (update_left <= interval.left &&
+        interval.right <= update_right) {
+        d[interval.root] +=
+            (interval.right - interval.left + 1) *
+            delta_val;
         lazy[interval.root] += delta_val;
         return;
     }
     push_down(interval);
 
-    int mid = interval.left + (interval.right - interval.left) / 2;
+    int mid = MID;
     if (update_left <= mid) {
-        update(update_left, update_right, delta_val, {interval.left, mid, interval.root * 2});
+        update(update_left,
+               update_right,
+               delta_val,
+               LEFT_INTERVAL);
     }
     if (update_right > mid) {
-        update(update_left, update_right, delta_val, {mid + 1, interval.right, interval.root * 2 + 1});
+        update(update_left,
+               update_right,
+               delta_val,
+               RIGHT_INTERVAL);
     }
-    d[interval.root] = d[interval.root * 2] + d[interval.root * 2 + 1];
+    d[interval.root] =
+        d[interval.root * 2] + d[interval.root * 2 + 1];
 }
 
 

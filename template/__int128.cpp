@@ -30,15 +30,15 @@ __int128 read() {
 istream& operator>>(istream& is, __int128& a) {
     __int128 x = 0, f = 1;
     char ch;
-    cin.get(ch);
+    is.get(ch);
     while (ch < '0' || ch > '9') {
         if (ch == '-')
             f = -1;
-        cin.get(ch);
+        is.get(ch);
     }
     while (ch >= '0' && ch <= '9') {
         x = x * 10 + ch - '0';
-        cin.get(ch);
+        is.get(ch);
     }
     a = x * f;
     return is;
@@ -70,7 +70,5 @@ signed main() {
     cin.tie(0);
     cout.tie(0);
 
-    cin >>
-
-        return 0;
+    return 0;
 }
