@@ -1,4 +1,3 @@
-// ai写的，通过了，之后详细分析一下
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -14,107 +13,136 @@
 #include <climits>
 using namespace std;
 
+const int N   = 16;
+const int INF = 0x3f3f3f3f;
+
+int n;
+int hp;
+int m;
+int hurt[N];
+struct Edge {
+    int v, w;
+};
+vector<Edge> edge[N];
+
+int dis[1 << N][N][105];
+bool vis[N];
+
 
 struct State {
-    int S, u, h, t;
-    bool operator>(const State& other) const {
-        return t > other.t;
+    int S, pos, heart, time;
+    bool operator>(const State& a) const {
+        return this->time > a.time;
     }
 };
+int killcost[1 << N][N];
 
-int N, M, HP;
-
-const int INF = 1e9;
-
-int ans = INF;
+priority_queue<State, vector<State>, greater<State>> pq;
 
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
+    cout.tie(0);
 
-    cin >> N >> M >> HP;
-
-    vector<int> hurt(N);
-    for (int i = 0; i < N; i++)
+    ////////////////////////////////////////
+    // 输入+存储
+    cin >> n >> m >> hp;
+    for (int i = 0; i < n; ++i) {
         cin >> hurt[i];
-
-    vector<vector<pair<int, int>>> g(N);
-    for (int i = 0; i < M; i++) {
+    }
+    // 标准的邻接链表存储法
+    for (int i = 0; i < m; ++i) {
         int u, v, w;
         cin >> u >> v >> w;
-        g[u].push_back({v, w});
-        g[v].push_back({u, w});
+        edge[u].push_back({v, w});
+        edge[v].push_back({u, w});
     }
 
-    // 预处理 killCost[S][u]
-    vector<vector<int>> killCost(1 << N, vector<int>(N, 0));
-
-    for (int S = 0; S < (1 << N); S++) {
-        for (int u = 0; u < N; u++) {
+    //////////////////////////////////
+    // 预处理一个常量数组
+    for (int S = 0; S <= (1 << n); S++) {
+        for (int u = 0; u < n; u++) {
             if (S >> u & 1)
-                continue;  // 还没杀 u 时才需要计算
+                continue;
             int damage = 0;
-            for (auto [v, w] : g[u]) {
-                if (!(S >> v & 1)) {  // v 还没被杀
+            for (auto [v, w] : edge[u]) {
+                if (!(S >> v & 1)) {
                     damage += hurt[v];
                 }
             }
-            killCost[S][u] = damage;
+            killcost[S][u] = damage;
         }
     }
 
-    // Dijkstra
-    // dist[S][u][h] 初始 INF
-
-    vector<vector<vector<int>>> dist(
-        1 << N,
-        vector<vector<int>>(N, vector<int>(HP + 1, INF)));
-    priority_queue<State, vector<State>, greater<State>> pq;
-
-    int startS = 0;                    // 还没杀任何怪
-    int startH = HP - killCost[0][0];  // 先杀 0 号
-    if (startH > 0) {
-        dist[1 << 0][0][startH] = 0;
-        pq.push({1 << 0, 0, startH, 0});
+    ////////////////////////////////////////////
+    // dijkstra algorithm
+    // 1.初始化为INF
+    for (int u = 1; u <= (1 << n); ++u) {
+        for (int v = 0; v < n; ++v) {
+            for (int h = 0; h <= hp; ++h) {
+                dis[u][v][h] = INF;
+            }
+        }
     }
 
 
+    int ans = INF;
+
+    // 2.处理第一个点，塞入priority_queue
+    int startS = 0;
+    int startH = hp - killcost[0][0];
+    if (startH > 0) {
+        dis[1 << 0][0][startH] = 0;
+        pq.push({1 << 0, 0, startH, 0});
+    }
+    // 3.bfs查找最优路径
     while (!pq.empty()) {
+        // 4.获取堆顶元素
         State cur = pq.top();
         pq.pop();
-        int S = cur.S, u = cur.u, h = cur.h, t = cur.t;
-        if (t > dist[S][u][h])
-            continue;
+        int S = cur.S;
+        int u = cur.pos;
+        int h = cur.heart;
+        int t = cur.time;
 
-        if (S == (1 << N) - 1 && u == N - 1 && h > 0) {
+        // 5.剪枝：没有前一个答案更优，则直接剪枝
+        if (t > ans) {
+            continue;
+        }
+        // 5.剪枝：相同状态下时间更长，则直接剪枝
+        if (t > dis[S][u][h]) {
+            continue;
+        }
+        // 6.剪枝完立即看是不是终点状态：把怪物全杀了&&到达了终点&&还有生命值
+        if (S == (1 << n) - 1 && u == n - 1 && h > 0) {
             ans = min(ans, t);
             continue;
         }
 
-        // 1. 杀当前点 u（如果还没杀）
-        if (!(S >> u & 1)) {
-            int damage = killCost[S][u];
-            int nh     = h - damage;
-            if (nh > 0) {
-                int nS = S | (1 << u);
-                if (t < dist[nS][u][nh]) {
-                    dist[nS][u][nh] = t;
-                    pq.push({nS, u, nh, t});
+        // 7.在continue的情况后再进行本点的处理
+        if (!(S & (1 << u))) {
+            int damage   = killcost[S][u];
+            int nowheart = h - damage;
+            if (nowheart > 0) {
+                int nowS = S | (1 << u);
+                if (t < dis[nowS][u][nowheart]) {
+                    dis[nowS][u][nowheart] = t;
+                    pq.push({nowS, u, nowheart, t});
                 }
             }
         }
+        // 8.标准dijkstra后续处理
+        for (auto e : edge[u]) {
+            int v = e.v;
+            int w = e.w;
 
-        // 2. 移动到邻居 v
-        for (auto [v, w] : g[u]) {
-            int nt = t + w;
-            if (nt < dist[S][v][h]) {
-                dist[S][v][h] = nt;
-                pq.push({S, v, h, nt});
+            if (dis[S][v][h] > t + w) {
+                dis[S][v][h] = t + w;
+                pq.push({S, v, h, t + w});
             }
         }
     }
 
-    cout << (ans == INF ? -1 : ans) << endl;
-
+    cout << (ans == INF ? -1 : ans);
     return 0;
 }
