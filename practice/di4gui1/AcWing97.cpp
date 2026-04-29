@@ -42,7 +42,10 @@ signed main() {
 
     int a, b;
     cin >> a >> b;
-
+    if (a == 0) {
+        cout << 0;
+        return 0;
+    }
     if (b == 0) {
         cout << 1;
         return 0;
