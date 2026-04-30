@@ -43,8 +43,67 @@ vector<int> discrete(vector<int> a) {
 
 
 /**
- * @name
+ * @brief 排队型发牌问题(平分牌)
+ * @param a 每个人的牌数，这里保证sum(a)%a.size()==0
  */
+int fapai(vector<int> a) {
+    int n   = a.size();
+    int sum = 0;
+    for (auto x : a) {
+        sum += x;
+    }
+    int avr = sum / n;
+
+    for (auto& x : a) {
+        x -= avr;
+    }
+
+    int last_a = 0;
+    vector<int> s;
+    for (auto x : a) {
+        s.push_back(x + last_a);
+        last_a += x;
+    }
+
+    int ans = 0;
+    for (auto x : s) {
+
+        ans += abs(x);
+    }
+    return ans;
+}
+/**
+ * @brief 循环型发牌问题(平分牌)
+ * @param a 每个人的牌数，这里保证sum(a)%a.size()==0
+ */
+int fapai_xunhuan(vector<int> a) {
+    int n   = a.size();
+    int sum = 0;
+    for (auto x : a) {
+        sum += x;
+    }
+    int avr = sum / n;
+
+    for (auto& x : a) {
+        x -= avr;
+    }
+
+    int last_a = 0;
+    vector<int> s;
+    for (auto x : a) {
+        s.push_back(x + last_a);
+        last_a += x;
+    }
+
+    sort(s.begin(), s.end());
+    int s_mid = s[s.size() / 2];
+    int ans   = 0;
+    for (auto x : s) {
+        ans += abs(x - s_mid);
+    }
+    return ans;
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
