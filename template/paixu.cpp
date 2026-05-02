@@ -17,6 +17,15 @@
 using namespace std;
 
 /**
+ * @name unique
+ * @brief »•÷ÿ
+ */
+vector<int> unique(vector<int> a) {
+    sort(a.begin(), a.end());
+    a.erase(unique(a.begin(), a.end()), a.end());
+    return a;
+}
+/**
  * @name discrete
  * @brief ¿Î…¢ªØ
  */

@@ -1,0 +1,22 @@
+# 板子
+
+- [OI模板](@OI.cpp)
+- [__int128](__int128.cpp)
+- [bit相关](bit.cpp)
+  - `qpow(a,x,MOD)`
+  - `lowbit(x)`
+- [二分](erfen.cpp)
+  - 库函数: `equal_range()`, `lower_bound()`, `upper_bound()`, `binary_search()`
+  - 整数集合上的二分
+  - 实数域上的二分
+- [排序](paixu.cpp)
+  - 库函数:
+    - 快速: `sort(iterator begin, iterator end [, __Function cmp])`
+    - 稳定: `stable_sort(iterator begin, iterator end [, __Function cmp])`
+    - 前`mid-begin`个都有序: `partial_sort(iterator begin, iterator mid, iterator end [, __Function cmp])`
+    - 第`mid-begin`个位置正确: `nth_element(iterator begin, iterator nth, iterator end [, __Function cmp])`
+    - 判断有序: `is_sorted(iterator begin, iterator end [, __Function cmp])`
+  - 去重: `sorted.erase(std::unique(sorted.begin(), sorted.end()), sorted.end());`
+  - 离散化: `discrete()`
+  - 中位数: $f(x)=\sum_{i=1}^{n} abs(sorted[i]-sorted[x])$, 当$x=mid$时$f(x)$最小
+- 
