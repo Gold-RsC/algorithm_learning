@@ -21,3 +21,6 @@
   - 离散化: `discrete()`
   - 中位数: $f(x)=\sum_{i=1}^{n} abs(sorted[i]-sorted[x])$, 当$x=mid$时$f(x)$最小
   - 逆序数: 用归并排序求解
+- [倍增](xxxxxxxxxxxx)
+  - [倍增分段模板](beizengfenduan.cpp)
+  - [ST算法](st.cpp)
