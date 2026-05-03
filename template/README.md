@@ -2,8 +2,9 @@
 
 - [OI模板](@OI.cpp)
 - [__int128](__int128.cpp)
+- [gcd](gcd.cpp)
 - [bit相关](bit.cpp)
-  - `qpow(a,x,MOD)`
+  - [`qpow(a,x,MOD)`](qpow.cpp)
   - `lowbit(x)`
 - [二分](erfen.cpp)
   - 库函数: `equal_range()`, `lower_bound()`, `upper_bound()`, `binary_search()`
@@ -19,4 +20,4 @@
   - 去重: `sorted.erase(std::unique(sorted.begin(), sorted.end()), sorted.end());`
   - 离散化: `discrete()`
   - 中位数: $f(x)=\sum_{i=1}^{n} abs(sorted[i]-sorted[x])$, 当$x=mid$时$f(x)$最小
-- 
+  - 逆序数: 用归并排序求解

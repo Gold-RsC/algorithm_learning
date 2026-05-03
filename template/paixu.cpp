@@ -17,15 +17,6 @@
 using namespace std;
 
 /**
- * @name unique
- * @brief 去重
- */
-vector<int> unique(vector<int> a) {
-    sort(a.begin(), a.end());
-    a.erase(unique(a.begin(), a.end()), a.end());
-    return a;
-}
-/**
  * @name discrete
  * @brief 离散化
  */
@@ -112,6 +103,50 @@ int fapai_xunhuan(vector<int> a) {
         ans += abs(x - s_mid);
     }
     return ans;
+}
+
+/**
+ * @brief 求逆序对=>归并排序
+ */
+int tmp[114514];
+
+int merge(int a[], int l, int r) {  // 左闭右开
+    int mid = (l + r) / 2;
+    int cnt = 0;
+    int i = l, j = mid;
+    int k = l;
+    while (i < mid && j < r) {
+        if (a[i] <= a[j]) {
+            tmp[k++] = a[i++];
+        }
+        else {
+            tmp[k++] = a[j++];
+            cnt += mid - i;
+        }
+    }
+    while (i < mid) {
+        tmp[k++] = a[i++];
+    }
+    while (j < r) {
+        tmp[k++] = a[j++];
+    }
+    for (k = l; k < r; ++k) {
+        a[k] = tmp[k];
+    }
+    return cnt;
+}
+int merge_sort(int a[], int l, int r) {
+    if (r - l <= 1) {
+        return 0;
+    }
+    int cnt = 0;
+    int mid = (l + r) / 2;
+
+    cnt += merge_sort(a, l, mid);
+    cnt += merge_sort(a, mid, r);
+
+    cnt += merge(a, l, r);
+    return cnt;
 }
 
 signed main() {

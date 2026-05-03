@@ -105,6 +105,50 @@ int fapai_xunhuan(vector<int> a) {
     return ans;
 }
 
+/**
+ * @brief ÇóÄæĞò¶Ô=>¹é²¢ÅÅĞò
+ */
+int tmp[114514];
+
+int merge(int a[], int l, int r) {  // ×ó±ÕÓÒ¿ª
+    int mid = (l + r) / 2;
+    int cnt = 0;
+    int i = l, j = mid;
+    int k = l;
+    while (i < mid && j < r) {
+        if (a[i] <= a[j]) {
+            tmp[k++] = a[i++];
+        }
+        else {
+            tmp[k++] = a[j++];
+            cnt += mid - i;
+        }
+    }
+    while (i < mid) {
+        tmp[k++] = a[i++];
+    }
+    while (j < r) {
+        tmp[k++] = a[j++];
+    }
+    for (k = l; k < r; ++k) {
+        a[k] = tmp[k];
+    }
+    return cnt;
+}
+int merge_sort(int a[], int l, int r) {
+    if (r - l <= 1) {
+        return 0;
+    }
+    int cnt = 0;
+    int mid = (l + r) / 2;
+
+    cnt += merge_sort(a, l, mid);
+    cnt += merge_sort(a, mid, r);
+
+    cnt += merge(a, l, r);
+    return cnt;
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
