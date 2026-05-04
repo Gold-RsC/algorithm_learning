@@ -3,7 +3,7 @@
 - [OI模板](@OI.cpp)
 - [__int128](__int128.cpp)
 - [gcd](gcd.cpp)
-- [bit相关](bit.cpp)
+- [bit](bit.cpp)
   - [`qpow(a,x,MOD)`](qpow.cpp)
   - `lowbit(x)`
 - [二分](erfen.cpp)
@@ -21,6 +21,12 @@
   - 离散化: `discrete()`
   - 中位数: $f(x)=\sum_{i=1}^{n} abs(sorted[i]-sorted[x])$, 当$x=mid$时$f(x)$最小
   - 逆序数: 用归并排序求解
-- [倍增](xxxxxxxxxxxx)
+- 倍增
   - [倍增分段模板](beizengfenduan.cpp)
   - [ST算法](st.cpp)
+- 数论
+  - 质数
+    - 质数的判定
+    - 质数筛法
+    - 质因数分解
+  - 因数
