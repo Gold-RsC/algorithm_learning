@@ -15,7 +15,8 @@
 #include <climits>
 #include <cstring>
 using namespace std;
-
+stack<int> s0;
+stack<int> s1;
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
@@ -41,5 +42,28 @@ signed main() {
     }
 
 
-        return 0;
+    int sum = 0;
+    int cur = 1;
+    vector<pair<int, int>> ans;
+    for (int i = 0; i < t.size(); ++i) {
+        if (t[i] == '0') {
+            --sum;
+            if (sum > 0) {
+                ans.push_back({cur, 1});
+            }
+            else {
+            }
+        }
+        else {
+            ++sum;
+            if (sum < 0) {
+                ans.push_back({cur, 2});
+            }
+            else {
+            }
+        }
+    }
+
+
+    return 0;
 }
