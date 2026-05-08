@@ -16,19 +16,18 @@
 #include <cstring>
 using namespace std;
 
+int n, m;
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
-    string s;
-    cin >> s;
-    if (s.substr(s.size() - 12, 12) == "isallyouneed") {
-        cout << "Yes\n";
-        cout << s.substr(0, s.size() - 12);
-    }
-    else {
-        cout << "No";
+    cin >> n >> m;
+    for (int i = 0; i < m; ++i) {
+        string s;
+        cin >> s;
+        for (auto x : s) {
+        }
     }
 
     return 0;

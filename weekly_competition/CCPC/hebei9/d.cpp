@@ -17,43 +17,53 @@
 using namespace std;
 #define int long long
 int n, k;
-vector<int> a;
+
+// x,cnt
+vector<pair<int, int>> r;
+
 vector<int> sum;
+vector<int> scnt;
+
+
 bool check(int d) {
-    int cnt = 0;
-    int j   = 1;
-    for (int i = 0; i < n; ++i) {
-        if (j <= i) {
-            j = i + 1;
+    int c = 0;
+    for (int i = 0, j = 0; i < n && j < n; ++i) {
+        if (j < i) {
+            j = i;
         }
-        while (j < n && a[j] - a[i] <= d) {
-            j++;
-        }
-        cnt += (j - 1) - i;
-        if (cnt >= k) {
-            return true;
-        }
-    }
-    return cnt >= k;
-}
-int get_sum(int d) {
-    int ans = 0;
-    //[]
-    for (int i = 0; i < n; ++i) {
-        int j = i + 1;
-
-
-        while (j < n && a[j] - a[i] <= d) {
+        while (j + 1 < n && r[j + 1].first - r[i].first <= d) {
             ++j;
         }
 
-        --j;
-
-        // if (j != i) {
-
-        ans += (sum[j] - sum[i]) - a[i] * (j - i);
-        // }
+        // cerr << i << " " << j << " " << a[i] << " " << a[j] << endl;
+        c += (scnt[j] - scnt[i]) * r[i].second + r[i].second * (r[i].second - 1) / 2;
+        // cerr << i << " " << j << " c:" << c << endl;
+        if (c >= k) {
+            return true;
+        }
     }
+
+    // cerr << cnt << endl;
+    return c >= k;
+}
+int get_sum(int d) {
+    int ans = 0;
+    int c   = 0;
+    //[]
+    for (int i = 0, j = 0; i < n && j < n; ++i) {
+        if (j < i) {
+            j = i;
+        }
+        while (j + 1 < n && r[j + 1].first - r[i].first < d) {
+            ++j;
+        }
+
+
+        ans += (sum[j] - sum[i] - r[i].first * (scnt[j] - scnt[i])) * r[i].second;
+        c += (scnt[j] - scnt[i]) * r[i].second + r[i].second * (r[i].second - 1) / 2;
+    }
+
+    ans += d * (k - c);
     return ans;
 }
 signed main() {
@@ -63,41 +73,51 @@ signed main() {
 
     cin >> n >> k;
 
-    a.resize(n);
-    for (int i = 0; i < n; ++i) {
-        cin >> a[i];
+    {
+        vector<int> a(n);
+        for (int i = 0; i < n; ++i) {
+            cin >> a[i];
+        }
+
+        sort(a.begin(), a.end());
+
+        for (auto x : a) {
+            if (r.empty() || r.back().first != x) {
+                r.push_back({x, 1});
+            }
+            else {
+                ++r.back().second;
+            }
+        }
     }
 
-    sort(a.begin(), a.end());
-    int newn = a.erase(unique(a.begin(), a.end()), a.end()) - a.begin();
-    k -= n - newn;
-    if (k <= 0) {
-        cout << 0;
-        return 0;
-    }
-    n = newn;
+    n = r.size();
 
-    sum.resize(n);
-    for (int i = 0, s = 0; i < n; ++i) {
-        s += a[i];
-        sum[i] = s;
+
+    for (int i = 0, s = 0, c = 0; i < n; ++i) {
+        s += r[i].first * r[i].second;
+        c += r[i].second;
+        sum.push_back(s);
+        scnt.push_back(c);
     }
 
-    int l = 0, r = LLONG_MAX;
-    while (l < r) {
-        int mid = l + (r - l >> 1);
-        // cerr << l << " " << r << " " << mid << endl;
-        if (check(mid)) {
-            r = mid;
+    // cerr << r.size() << " " << n << endl;
+    int L = 0, R = r.back().first - r.front().first;
+    while (L < R) {
+        int d = L + (R - L >> 1);
+        // cerr << L << " " << R << " " << d << endl;
+        if (check(d)) {
+            R = d;
         }
         else {
-            l = mid + 1;
+            L = d + 1;
         }
     }
 
+    // cerr << l << " " << r << endl;
 
-    cout << get_sum(l - 1) + (k - (check(l - 1))) * l;
-    ;
+    cout << get_sum(L);
+
 
     return 0;
 }
