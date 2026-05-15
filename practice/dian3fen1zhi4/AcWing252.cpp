@@ -15,21 +15,23 @@
 #include <climits>
 #include <cstring>
 using namespace std;
-
-const int N = 1e6 + 5;
-
+const int N = 1e4 + 5;
 struct Edge {
     int next;
     int to;
+    int weight;
 };
-int weight[N];
-int cnt[N];
 vector<Edge> edge;
 
 vector<int> head(N, -1);
-
-void add(int u, int v) {
-    edge.push_back({head[u], v});
+vector<bool> isnot_root(N, 0);
+void init_edge() {
+    edge.clear();
+    fill(head.begin(), head.end(), -1);
+    fill(isnot_root.begin(), isnot_root.end(), 0);
+}
+void add_edge(int u, int v, int w) {
+    edge.push_back({head[u], v, w});
     head[u] = edge.size() - 1;
 }
 
@@ -42,54 +44,45 @@ bool find_edge(int u, int v) {
     return false;
 }
 
+int ans = 0;
 void dfs(int u) {
+
+
     for (int i = head[u]; ~i; i = edge[i].next) {
         dfs(edge[i].to);
     }
 }
 
-void init() {
-    dfs(1);
-}
-void solve() {
-    int s, t;
-    cin >> s >> t;
-    if (t == 1) {
-        cout << cnt[s] << endl;
-    }
-    else {
-        if (s - cnt[s] <= t) {
-            cout << (cnt[s] - cnt[t]) << endl;
-        }
-        else {
-            cout << cnt[s] << endl;
-        }
-    }
-}
-int n, q;
 
+int n, k;
+
+void solve() {
+}
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
-    cin >> n;
-    for (int i = 1; i <= n; ++i) {
-        cin >> weight[i];
-    }
-    for (int i = 2; i <= n; ++i) {
-        int u;
-        cin >> u;
-        add(u, i);
+    while (1) {
+
+        cin >> n >> k;
+        if (n == 0 && k == 0) {
+            break;
+        }
+        for (int i = 1; i < n; ++i) {
+            int u, v, l;
+            cin >> u >> v >> l;
+            add(u, v, l);
+            isnot_root[v] = true;
+        }
+        for (int i = 0; i < n; ++i) {
+            if (!isnot_root[i]) {
+                dfs(i);
+                break;
+            }
+        }
     }
 
-    init();
-
-    int q;
-    cin >> q;
-    while (q--) {
-        solve();
-    }
 
     return 0;
 }
