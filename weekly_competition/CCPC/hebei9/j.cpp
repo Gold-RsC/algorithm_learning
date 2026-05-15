@@ -15,55 +15,94 @@
 #include <climits>
 #include <cstring>
 using namespace std;
-stack<int> s0;
-stack<int> s1;
+
+const int N = 1e6 + 10;
+
+typedef pair<int, int> pii;
+
+vector<pii> ans;
+map<int, vector<int>> pos;
+
+int pre[N];
+
+string s;
+
+//[)
+void dfs(int b, int e, int base) {
+    if (b >= e) {
+        return;
+    }
+
+
+    int target = pre[b] - (s[b] == '1' ? 1 : -1);
+
+    const vector<int>& v = pos[target];
+
+
+    int begin_idx;
+    if (b) {
+        begin_idx = lower_bound(v.begin(), v.end(), b - 1) - v.begin();
+    }
+    else {
+        begin_idx = -1;
+    }
+
+    if (s[b] == '1') {
+        ans.push_back({base, 2});
+    }
+    else {
+        ans.push_back({base, 1});
+    }
+
+    dfs(b + 1, v[begin_idx + 1], base);
+    int cnt = (v[begin_idx + 1] + 1 - b) / 2;
+    dfs(v[begin_idx + 1] + 1, e, base + cnt);
+}
+
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
-    string t;
-    cin >> t;
 
-    if (t.size() & 1) {
+    cin >> s;
+
+    if (s.size() & 1) {
         cout << -1;
         return 0;
     }
 
     int cnt0 = 0;
-    for (auto x : t) {
+    for (auto x : s) {
         if (x == '0') {
             ++cnt0;
         }
     }
-    if (cnt0 * 2 != t.size()) {
+    if (cnt0 * 2 != s.size()) {
         cout << -1;
         return 0;
     }
 
+    int n = s.length();
 
-    int sum = 0;
-    int cur = 1;
-    vector<pair<int, int>> ans;
-    for (int i = 0; i < t.size(); ++i) {
-        if (t[i] == '0') {
-            --sum;
-            if (sum > 0) {
-                ans.push_back({cur, 1});
-            }
-            else {
-            }
-        }
-        else {
-            ++sum;
-            if (sum < 0) {
-                ans.push_back({cur, 2});
-            }
-            else {
-            }
-        }
+
+    for (int i = 0, su = 0; i < n; ++i) {
+        su += (s[i] == '1' ? 1 : -1);
+        pre[i] = su;
+        pos[su].push_back(i);
+    }
+    if (pre[n] != 0) {
+        cout << -1 << endl;
+        return 0;
     }
 
+    dfs(0, n, 1);
+
+
+    cout << ans.size() << endl;
+    for (auto [x, y] : ans) {
+        cout << x << " " << y << "\n";
+    }
 
     return 0;
 }

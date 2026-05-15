@@ -24,6 +24,7 @@ struct Edge {
 };
 int weight[N];
 int cnt[N];
+int tmp_cnt[N];
 vector<Edge> edge;
 
 vector<int> head(N, -1);
@@ -32,39 +33,38 @@ void add(int u, int v) {
     edge.push_back({head[u], v});
     head[u] = edge.size() - 1;
 }
-
-bool find_edge(int u, int v) {
-    for (int i = head[u]; ~i; i = edge[i].next) {
-        if (edge[i].to == v) {
-            return true;
-        }
-    }
-    return false;
-}
+int d[N];
 
 void dfs(int u) {
     for (int i = head[u]; ~i; i = edge[i].next) {
-        dfs(edge[i].to);
+        int v = edge[i].to;
+
+        cnt[weight[v]] = tmp_cnt[weight[v]] = tmp_cnt[weight[v] + 1] + 1;
+
+        d[v] = d[u] + 1;
+
+        dfs(v);
+
+        tmp_cnt[weight[v]] -= tmp_cnt[weight[v] + 1] + 1;
     }
 }
 
 void init() {
+    tmp_cnt[weight[1]] = cnt[weight[1]] = 1;
+
+    d[1] = 1;
+
     dfs(1);
 }
 void solve() {
     int s, t;
     cin >> s >> t;
-    if (t == 1) {
-        cout << cnt[s] << endl;
-    }
-    else {
-        if (s - cnt[s] <= t) {
-            cout << (cnt[s] - cnt[t]) << endl;
-        }
-        else {
-            cout << cnt[s] << endl;
-        }
-    }
+
+    int d_d = d[s] - d[t];
+
+    int d_cnt = cnt[s] - cnt[t];
+
+    int d_weight = weight[t] - weight[s];
 }
 int n, q;
 
