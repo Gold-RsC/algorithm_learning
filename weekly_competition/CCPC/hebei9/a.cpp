@@ -15,7 +15,7 @@
 #include <climits>
 #include <cstring>
 using namespace std;
-
+#define int long long
 int n;
 const int N = 2e5 + 5;
 int a[N][2];
