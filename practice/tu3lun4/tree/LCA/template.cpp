@@ -81,10 +81,11 @@ int f[N][LOGN];
 int d[N];
 
 
-void prework() {
+void prework(int root) {
     queue<int> q;
-    q.push(1);
-    int t = (int)(log(n) / log(2)) + 1;
+    q.push(root);
+    d[root] = 1;
+    int t   = (int)(log(n) / log(2)) + 1;
 
     while (!q.empty()) {
         int u = q.front();
@@ -93,7 +94,9 @@ void prework() {
         for (int i = head[u]; ~i; i = edge[i].next) {
             int v = edge[i].to;
             int w = edge[i].weight;
-
+            if (d[v]) {
+                continue;
+            }
             q.push(v);
 
             d[v] = d[u] + 1;
