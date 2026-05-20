@@ -50,11 +50,11 @@ int a[N];  // ÖÐÐò
 
 int b[N];  // Ç°Ðò
 
-void prework() {
+void prework(int root) {
     queue<int> q;
-    q.push(weight_to_idx[b[1]]);
+    q.push(root);
 
-    d[weight_to_idx[b[1]]] = 1;
+    d[root] = 1;
 
     int t = (int)(log(n) / log(2)) + 1;
 
@@ -101,7 +101,7 @@ int lca(int x, int y) {
     return f[x][0];
 }
 
-void build(int father, int a_begin, int a_end, int b_begin, int b_end) {
+void build(long long father, int a_begin, int a_end, int b_begin, int b_end) {
     if (a_begin == a_end || b_begin == b_end) {
         return;
     }
@@ -109,7 +109,7 @@ void build(int father, int a_begin, int a_end, int b_begin, int b_end) {
     int a_mid = weight_to_idx[root];
     int b_mid = b_begin + 1 + a_mid - a_begin;
 
-    if (father != -1) {
+    if (father != LLONG_MAX) {
         // cerr << "build" << father << " " << root << endl;
         add_edge(weight_to_idx[father], weight_to_idx[root]);
     }
@@ -132,8 +132,10 @@ signed main() {
     for (int i = 1; i <= n; ++i) {
         cin >> b[i];
     }
-    build(-1, 1, n + 1, 1, n + 1);
-    prework();
+    build(LLONG_MAX, 1, n + 1, 1, n + 1);
+    prework(weight_to_idx[b[1]]);
+
+
     while (m--) {
         int u, v;
         cin >> u >> v;
