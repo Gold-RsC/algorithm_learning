@@ -12,6 +12,11 @@
 #include <cmath>
 #include <climits>
 using namespace std;
+/**
+ * @brief Dijkstra
+ * @details time O(m log n)
+ * @details 只允许非负权图
+ */
 const int N   = 1e3;
 const int INF = 0x3f3f3f3f;
 int n;

@@ -13,6 +13,11 @@
 #include <climits>
 using namespace std;
 
+/**
+ * @name SPFA
+ * @details time<=O(nm) space O(n)
+ * @details 适用于正负边权的图，可以判断无最短路的情况
+ */
 const int N   = 1e3;
 const int INF = 0x3f3f3f3f;
 struct Edge {

@@ -11,9 +11,15 @@
 #include <string>
 #include <cmath>
 using namespace std;
+/**
+ * @name gcd
+ */
 int gcd(int a, int b) {
     return b ? gcd(b, a % b) : a;
 }
+/**
+ * @name lcm
+ */
 int lcm(int a, int b) {
     return a / gcd(a, b) * b;
 }

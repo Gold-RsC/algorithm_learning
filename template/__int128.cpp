@@ -13,6 +13,10 @@
 #include <climits>
 using namespace std;
 
+/**
+ * @brief __int128的输入输出
+ */
+// C风格
 __int128 read() {
     __int128 x = 0, f = 1;
     char ch = getchar();
@@ -27,6 +31,17 @@ __int128 read() {
     }
     return x * f;
 }
+void print(__int128 x) {
+    if (x < 0) {
+        putchar('-');
+        x = -x;
+    }
+    if (x > 9) {
+        print(x / 10);
+    }
+    putchar(x % 10 + '0');
+}
+// C++风格
 istream& operator>>(istream& is, __int128& a) {
     __int128 x = 0, f = 1;
     char ch;
@@ -42,16 +57,6 @@ istream& operator>>(istream& is, __int128& a) {
     }
     a = x * f;
     return is;
-}
-void print(__int128 x) {
-    if (x < 0) {
-        putchar('-');
-        x = -x;
-    }
-    if (x > 9) {
-        print(x / 10);
-    }
-    putchar(x % 10 + '0');
 }
 ostream& operator<<(ostream& os, __int128 x) {
     if (x < 0) {

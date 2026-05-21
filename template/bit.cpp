@@ -32,9 +32,7 @@ int qpow(int a, int b, int MOD) {
 }
 /**
  * @brief mul
- *
  */
-
 int64_t mul(int64_t a, int64_t b, int64_t MOD) {
     a %= MOD;
     b %= MOD;
