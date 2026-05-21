@@ -2,7 +2,7 @@
 
 - [OI模板](@OI.cpp)
 - [__int128](__int128.cpp)
-- [gcd](gcd.cpp)
+
 - [bit](bit.cpp)
   - [`qpow(a,x,MOD)`](qpow.cpp)
   - `lowbit(x)`
@@ -24,12 +24,33 @@
 - 倍增
   - [倍增分段模板](beizengfenduan.cpp)
   - [ST算法](st.cpp)
+- 双指针
+  - 相向指针
+    - 接雨水问题
+    - 最大矩形
+  - 快慢指针
+    - 环问题
+  - 滑动窗口
+    - 最小覆盖字串
+    - 无重复字符的最长字串
+  - 分离指针
+    - 归并排序
+- 进阶数据结构
+  - [并查集](dsu.cpp)
+  - [线段树](XianDuanShu.cpp)
 - 数论
-  - 质数
+  - [质数](prime.cpp)
     - 质数的判定
     - 质数筛法
     - 质因数分解
+  - [gcd](gcd.cpp)
   - 因数
+- 动态规划
+  - [背包](beibao.cpp)
+    - 01背包
+    - 多重背包
+    - 完全背包
+    - 分组背包
 - 图论
   - 存储结构
     - [链式前向星](LianShiQianXiangXing.cpp)
@@ -42,3 +63,15 @@
     - [树的中心](center.cpp)
     - [LCA](LCA.cpp)
     - [树的重心](centroid.cpp)
+  - 生成树
+    - [最小生成树](MST.cpp)
+      - Kruskal算法
+      - Prim算法
+  - [二分图](ErFenTu.cpp)
+    - 染色判定法
+    - 最大匹配数(匈牙利算法)
+- 字符串
+  - [KMP模式匹配](KMP.cpp)
+  - [Trie字典树](trie.cpp)
+  - [SA](SA.cpp)
+  - [SAM](SAM.cpp)

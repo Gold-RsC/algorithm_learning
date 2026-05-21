@@ -198,7 +198,7 @@ struct Edge {
 };
 struct Node {
     int dis, u;
-    bool operator>(const Node& a) {
+    bool operator>(const Node& a) const {
         return dis > a.dis;
     }
 };
@@ -216,7 +216,7 @@ void Dijkstra2(int s) {
 
     while (!pq.empty()) {
         int u = pq.top().u;
-        q.pop();
+        pq.pop();
         if (vis[u]) {
             continue;
         }
