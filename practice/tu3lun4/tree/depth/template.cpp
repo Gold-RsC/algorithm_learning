@@ -15,8 +15,7 @@
 #include <climits>
 #include <cstring>
 using namespace std;
-const int N    = 1e5 + 5;
-const int LOGN = 20;
+
 struct Edge {
     int next;
     int to;
@@ -25,8 +24,6 @@ struct Edge {
 vector<Edge> edge;
 
 vector<int> head(N, -1);
-
-int n;
 
 void init_edge() {
     edge.clear();
@@ -48,40 +45,13 @@ bool find_edge(int u, int v) {
 
 
 /**
- * @brief 树的直径
- * @details 树形dp
- * @param d[x]: 以x节点为根节点，向下延申可形成的最长距离
- * @param ans: 经过x节点形成的最长直径
- */
-int d[N];
-int ans;
-void dp(int u, int fa) {
-    for (int i = head[u]; ~i; i = edge[i].next) {
-        int v = edge[i].to;
-        int w = edge[i].weight;
-
-        if (v == fa) {
-            continue;
-        }
-        dp(v, u);
-
-        // 这里的d[u]为1-(i-1)内的最大向下距离
-        ans  = max(ans, d[u] + d[v] + w);
-        d[u] = max(d[u], d[v] + w);
-    }
-}
-
-
-/**
- * @brief LCA
- * @details 树上倍增
- * @details 预处理O(nlogn)，询问O(logn)
- * @param f[x][k]:表示x的2^k辈祖先
+ * @brief depth和father
  * @param d[x]:表示x深度
+ * @param f[x][k]:表示x的2^k辈祖先
  */
 
-int f[N][LOGN];
 int d[N];
+int f[N][LOGN];
 
 
 void prework(int root) {
@@ -111,29 +81,6 @@ void prework(int root) {
         }
     }
 }
-int lca(int x, int y) {
-    if (d[x] > d[y]) {
-        swap(x, y);
-    }
-    int t = (int)(log(n) / log(2)) + 1;
-
-    for (int i = t; i >= 0; --i) {
-        if (d[f[y][i]] >= d[x]) {
-            y = f[y][i];
-        }
-    }
-    if (x == y) {
-        return x;
-    }
-    for (int i = t; i >= 0; --i) {
-        if (f[x][i] != f[y][i]) {
-            x = f[x][i];
-            y = f[y][i];
-        }
-    }
-    return f[x][0];
-}
-
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
