@@ -43,41 +43,45 @@ bool find_edge(int u, int v) {
     return false;
 }
 
+
 /**
- * @brief 树的重心
+ * @brief depth和father
+ * @param d[x]:表示x深度
+ * @param f[x][k]:表示x的2^k辈祖先
  * @details time O(n)
  */
-int size[N];
-int now_min;  // 去掉重心后的最大子树大小
-int ans;
-void dfs(int u) {
-    if (visited[u]) {
-        return;
-    }
-    visited[u] = true;
 
-    size[u] = 1;
-
-    int max_part = 0;  // 表示删掉x后分成的最大子树的大小
+int d[N];
+int f[N][LOGN];
 
 
-    for (int i = head[u]; ~i; i = edge[i].next) {
-        int v = edge[i].to;
-        int w = edge[i].weight;
-        dfs(v);
+void prework(int root) {
+    queue<int> q;
+    q.push(root);
+    d[root] = 1;
+    int t   = (int)(log(n) / log(2)) + 1;
 
-        size[u] += size[v];
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
 
-        max_part = max(max_part, size[v]);
-    }
-    max_part = max(max_part, n - size[u]);
-    if (max_part < now_min) {
-        now_min = max_part;
-        ans     = u;
+        for (int i = head[u]; ~i; i = edge[i].next) {
+            int v = edge[i].to;
+            int w = edge[i].weight;
+            if (d[v]) {
+                continue;
+            }
+            q.push(v);
+
+            d[v] = d[u] + 1;
+
+            f[v][0] = u;
+            for (int j = 1; j <= t; ++j) {
+                f[v][j] = f[f[v][j - 1]][j - 1];
+            }
+        }
     }
 }
-
-
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);

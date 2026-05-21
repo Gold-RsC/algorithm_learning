@@ -12,28 +12,26 @@
 #include <cmath>
 using namespace std;
 
-vector<bool> visited;
 
+/**
+ * @name 链式前向星
+ */
+const int N = 1e5 + 5;
+int n;
 struct Edge {
     int next;    // 下一个坐标
     int to;      // 指向的节点
-    int weight;  // 权重
+    int weight;  // 边权重
 };
 vector<Edge> edge;
-
-vector<int> head;  // 头节点的初始坐标
-
-vector<bool> isnt_root;
-
-void add(int u, int v, int w) {
+vector<int> head(N, -1);  // 头节点的初始坐标
+void add_edge(int u, int v, int w) {
     edge.push_back({head[u], v, w});
     head[u] = edge.size() - 1;
 
     isnt_root[v] = true;
 }
-
 bool find_edge(int u, int v) {
-    // ~i 表示 i != -1
     for (int i = head[u]; ~i; i = edge[i].next) {
         if (edge[i].to == v) {
             return true;
@@ -42,6 +40,12 @@ bool find_edge(int u, int v) {
     return false;
 }
 
+/**
+ * @brief dfs遍历
+ * @details time O(n)
+ */
+// 有环图
+vector<bool> visited;
 void dfs(int u) {
     if (visited[u]) {
         return;
@@ -51,6 +55,22 @@ void dfs(int u) {
         dfs(edge[i].to);
     }
 }
+// 无环图
+void tree_dfs(int u, int fa) {
+    for (int i = head[u]; ~i; i = edge[i].next) {
+        int v = edge[i].to;
+        int w = edge[i].weight;
+        if (v == fa) {
+            continue;
+        }
+        dfs(edge[i].to);
+    }
+}
+
+
+/**
+ * @brief 寻找根节点
+ */
 // 如果节点的情况未知
 vector<int> head_list;  // 头节点的集合
 vector<int> find_root() {
@@ -69,6 +89,7 @@ vector<int> find_root() {
     return root_list;
 }
 // 如果节点的情况已知
+vector<bool> isnt_root;
 void do_root() {
     for (int u = 1; u <= n; ++u) {
         if (!isnt_root[u]) {
