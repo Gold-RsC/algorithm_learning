@@ -22,7 +22,7 @@ using namespace std;
 /**
  * @name lower_bound
  * @brief 返回第一个大于等于x的下标
- * @note 按照左闭右开的规范
+ * @note 左闭右开
  */
 int lower_bound(const vector<int>& a, int l, int r, int x) {
     while (l < r) {
@@ -42,7 +42,7 @@ int lower_bound(const vector<int>& a, int l, int r, int x) {
 /**
  * @name
  * @brief 返回最后一个小于等于x的下标
- * @note 按照左闭右开的规范
+ * @note 左开右闭
  */
 int bound(const vector<int>& a, int l, int r, int x) {
     while (l < r) {
