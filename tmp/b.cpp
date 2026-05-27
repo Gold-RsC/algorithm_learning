@@ -16,14 +16,17 @@
 #include <cstring>
 using namespace std;
 
+string s = "PCAS03,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0";
 signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     cout.tie(0);
 
-    cout << fixed << setprecision(6);
-    cout << 244.5 + 47.40 / 2 + 19.35 / 2 + 10.16 / 2 + 8.38 / 3 + 8.20 / 3 + 18.35 / 3 + 244.5 << endl;
-    cout << 244.5 + 8.38 / 3 + 8.20 / 3 + 18.35 / 3;
+    char a = 0;
+    for (char x : s) {
+        a ^= x;
+    }
+    printf("%2.2X", a);
 
     return 0;
 }
