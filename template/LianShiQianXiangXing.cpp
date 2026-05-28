@@ -25,14 +25,6 @@ struct Edge {
 };
 vector<Edge> edge;
 vector<int> head(N, -1);  // 头节点的初始坐标
-struct Edge {
-    int next;
-    int to;
-    int weight;
-};
-vector<Edge> edge;
-
-vector<int> head(N, -1);
 
 void init_edge() {
     edge.clear();

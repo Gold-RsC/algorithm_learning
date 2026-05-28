@@ -44,13 +44,14 @@ struct DSU {
     }
 };
 
-struct Temp_edge {
+struct Edge {
     int u, v, w;
+    bool operator<(const Edge& o) const {
+        return w < o.w;
+    }
 };
-bool operator<(const Temp_edge& a, const Temp_edge& b) {
-    return a.w < b.w;
-}
-void kruskal(vector<Temp_edge>& lists) {
+
+void kruskal(vector<Edge>& lists) {
     int n = lists.size();
     sort(lists.begin(), lists.end());
 

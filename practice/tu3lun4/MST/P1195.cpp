@@ -20,10 +20,10 @@ const int N = 1e3 + 5;
 int n;
 int m;
 int k;
-struct Temp_edge {
+struct Edge {
     int u, v, w;
 };
-bool operator<(const Temp_edge& a, const Temp_edge& b) {
+bool operator<(const Edge& a, const Edge& b) {
     return a.w < b.w;
 }
 struct DSU {
@@ -49,7 +49,7 @@ struct DSU {
         size[x] += size[y];
     }
 };
-vector<Temp_edge> a;
+vector<Edge> a;
 void kruskal() {
     sort(a.begin(), a.end());
 
