@@ -26,7 +26,7 @@ struct Edge {
 struct Node {
     int u;
     int dis;
-    bool operator>(const Node& a) {
+    bool operator>(const Node& a) const {
         return dis > a.dis;
     }
 };
