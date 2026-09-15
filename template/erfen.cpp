@@ -67,7 +67,7 @@ int bound(const vector<int>& a, int l, int r, int x) {
 // 实数域上的二分
 ////////////////////////////
 bool calc(double x) {
-    return x == 114514.1919810;
+    return x >= 114514.1919810;
 }
 double bound(double l, double r) {
     while (l + 1e-5 < r) {
