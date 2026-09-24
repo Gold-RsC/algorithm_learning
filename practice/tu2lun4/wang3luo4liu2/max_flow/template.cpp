@@ -45,9 +45,9 @@ int dfs(int u, int t, int flow) {
         if (edge[u][v] > 0) {
             int d = dfs(v, t, min(flow, edge[u][v]));
             if (d > 0) {
-                edge[u][v] -= t;
-                edge[v][u] += t;
-                return t;
+                edge[u][v] -= d;
+                edge[v][u] += d;
+                return d;
             }
         }
     }
@@ -70,6 +70,77 @@ int max_flow1(int s, int t) {
  * @name Edmonds-Karp算法
  * @details 时间复杂度 O(V * E^2)
  */
+
+struct Edge {
+    int next;
+    int to;
+    int weight;
+};
+vector<Edge> edge;
+
+vector<int> head(N, -1);
+
+void init_edge() {
+    edge.clear();
+    fill(head.begin(), head.end(), -1);
+}
+void add_edge(int u, int v, int w) {
+    edge.push_back({head[u], v, w});
+    head[u] = edge.size() - 1;
+
+    // 反图
+    edge.push_back({head[v], u, 0});
+    head[v] = edge.size() - 1;
+}
+// pre[v] 记录到达 v 的边的下标
+int pre[N];
+// 每个点可增广的最小流量
+int minflow[N];
+
+bool bfs(int s, int t) {
+    memset(pre, -1, sizeof(pre));
+    memset(minflow, 0, sizeof(minflow));
+    queue<int> q;
+    q.push(s);
+    minflow[s] = INF;
+
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        if (u == t) {
+            break;
+        }
+
+        for (int i = head[u]; ~i; i = edge[i].next) {
+            int v = edge[i].to;
+            int w = edge[i].weight;
+
+            if (pre[v] == -1 && w > 0) {
+                pre[v]     = i;
+                minflow[v] = min(minflow[u], w);
+                q.push(v);
+            }
+        }
+    }
+    return pre[t] != -1;
+}
+
+int max_flow2(int s, int t) {
+    int flow = 0;
+    while (bfs(s, t)) {
+        int d = minflow[t];
+        for (int v = t; v != s) {
+            int i = pre[v];
+            edge[i].weight -= d;
+            edge[i ^ 1].weight += d;
+            v = edge[i ^ 1].to;
+        }
+        flow += d;
+    }
+    return flow;
+}
+
 /**
  * @name Dinic算法
  * @details 时间复杂度 O(V^2 * E)
