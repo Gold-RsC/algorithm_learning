@@ -2,8 +2,8 @@
 
 ## ¿¼Ç°¿´Ò»¿´
 
-[À¶ÇÅ±­ÁÙ¿¼¸´Ï°](README_lanqiao.md)
-
 [´úÂë°å×Ó](template/README.md)
 
-[XCPCÁÙ¿¼¸´Ï°](README_XCPC.md)
+[À¶ÇÅ±­ÁÙ¿¼¸´Ï°](docs/lanqiao.md)
+
+[XCPCÁÙ¿¼¸´Ï°](docs/xcpc.md)
