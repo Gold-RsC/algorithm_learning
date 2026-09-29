@@ -1,0 +1,46 @@
+#include <iostream>
+#include <iomanip>
+#include <array>
+#include <vector>
+#include <queue>
+#include <stack>
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+#include <bitset>
+#include <string>
+#include <numeric>
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <cstring>
+using namespace std;
+#define int long long
+
+int limit;
+bool iddfs(int u, int d) {
+    if (d > limit) {
+        return false;
+    }
+
+    iddfs(v, d + 1);
+    return true;
+}
+void solve() {
+    while (true) {
+        if (iddfs(s, 0)) {
+            break;
+        }
+        limit++;
+    }
+}
+
+signed main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+
+    return 0;
+}
