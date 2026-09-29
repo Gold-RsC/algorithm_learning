@@ -2,6 +2,7 @@
 *.exe
 
 # 测试数据输出 / 日志 / CPH 配置
+*.in
 *.out
 *.log
 .cph/
