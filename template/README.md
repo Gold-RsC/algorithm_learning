@@ -1,16 +1,16 @@
 # 板子
 
-- [OI模板](@OI.cpp)
-- [__int128](__int128.cpp)
+- [OI模板](code/OI.cpp)
+- [__int128](code/__int128.cpp)
 
-- [bit](bit.cpp)
-  - [`qpow(a,x,MOD)`](qpow.cpp)
+- [bit](code/bit.cpp)
+  - [`qpow(a,x,MOD)`](code/qpow.cpp)
   - `lowbit(x)`
-- [二分](erfen.cpp)
+- [二分](code/erfen.cpp)
   - 库函数: `equal_range()`, `lower_bound()`, `upper_bound()`, `binary_search()`
   - 整数集合上的二分
   - 实数域上的二分
-- [排序](paixu.cpp)
+- [排序](code/paixu.cpp)
   - 库函数:
     - 快速: `sort(iterator begin, iterator end [, __Function cmp])`
     - 稳定: `stable_sort(iterator begin, iterator end [, __Function cmp])`
@@ -22,8 +22,8 @@
   - 中位数: $f(x)=\sum_{i=1}^{n} abs(sorted[i]-sorted[x])$, 当$x=mid$时$f(x)$最小
   - 逆序数: 用归并排序求解
 - 倍增
-  - [倍增分段模板](beizengfenduan.cpp)
-  - [ST算法](st.cpp)
+  - [倍增分段模板](code/beizengfenduan.cpp)
+  - [ST算法](code/st.cpp)
 - 双指针
   - 相向指针
     - 接雨水问题
@@ -36,42 +36,42 @@
   - 分离指针
     - 归并排序
 - 进阶数据结构
-  - [并查集](dsu.cpp)
-  - [线段树](XianDuanShu.cpp)
+  - [并查集](code/dsu.cpp)
+  - [线段树](code/XianDuanShu.cpp)
 - 数论
   - [质数](prime.cpp)
     - 质数的判定
     - 质数筛法
     - 质因数分解
-  - [gcd](gcd.cpp)
+  - [gcd](code/gcd.cpp)
   - 因数
 - 动态规划
-  - [背包](beibao.cpp)
+  - [背包](code/beibao.cpp)
     - 01背包
     - 多重背包
     - 完全背包
     - 分组背包
 - 图论
   - 存储结构
-    - [链式前向星](LianShiQianXiangXing.cpp)
-    - [邻接链表](LinJieLianBiao.cpp)
+    - [链式前向星](code/LianShiQianXiangXing.cpp)
+    - [邻接链表](code/LinJieLianBiao.cpp)
   - 最短路
-    - [Dijkstra](Dijkstra.cpp)
-    - [SPFA](SPFA.cpp)
+    - [Dijkstra](code/Dijkstra.cpp)
+    - [SPFA](code/SPFA.cpp)
   - 树
-    - [深度、2^k辈父节点](depth.cpp)
-    - [树的中心](center.cpp)
-    - [LCA](LCA.cpp)
-    - [树的重心](centroid.cpp)
+    - [深度、2^k辈父节点](code/depth.cpp)
+    - [树的中心](code/center.cpp)
+    - [LCA](code/LCA.cpp)
+    - [树的重心](code/centroid.cpp)
   - 生成树
-    - [最小生成树](MST.cpp)
+    - [最小生成树](code/MST.cpp)
       - Kruskal算法
       - Prim算法
-  - [二分图](ErFenTu.cpp)
+  - [二分图](code/ErFenTu.cpp)
     - 染色判定法
     - 最大匹配数(匈牙利算法)
 - 字符串
-  - [KMP模式匹配](KMP.cpp)
-  - [Trie字典树](trie.cpp)
-  - [SA](SA.cpp)
-  - [SAM](SAM.cpp)
+  - [KMP模式匹配](code/KMP.cpp)
+  - [Trie字典树](code/trie.cpp)
+  - [SA](code/SA.cpp)
+  - [SAM](code/SAM.cpp)
