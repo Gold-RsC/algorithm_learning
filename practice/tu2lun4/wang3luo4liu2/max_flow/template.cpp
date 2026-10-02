@@ -70,11 +70,10 @@ int max_flow1(int s, int t) {
  * @name Edmonds-Karp算法
  * @details 时间复杂度 O(V * E^2)
  */
-
 struct Edge {
     int next;
     int to;
-    int weight;
+    int weight;  // capacity
 };
 vector<Edge> edge;
 
@@ -85,20 +84,20 @@ void init_edge() {
     fill(head.begin(), head.end(), -1);
 }
 void add_edge(int u, int v, int w) {
+    // 正图
     edge.push_back({head[u], v, w});
     head[u] = edge.size() - 1;
-
     // 反图
     edge.push_back({head[v], u, 0});
     head[v] = edge.size() - 1;
 }
 // pre[v] 记录到达 v 的边的下标
 int pre[N];
-// 每个点可增广的最小流量
+// minflow[v] 是s到v的最小剩余容量
 int minflow[N];
 
 bool bfs(int s, int t) {
-    memset(pre, -1, sizeof(pre));
+    fill(pre, pre + N, -1);
     memset(minflow, 0, sizeof(minflow));
     queue<int> q;
     q.push(s);
@@ -108,14 +107,11 @@ bool bfs(int s, int t) {
         int u = q.front();
         q.pop();
 
-        if (u == t) {
-            break;
-        }
-
         for (int i = head[u]; ~i; i = edge[i].next) {
             int v = edge[i].to;
             int w = edge[i].weight;
 
+            // 未访问或有剩余容量
             if (pre[v] == -1 && w > 0) {
                 pre[v]     = i;
                 minflow[v] = min(minflow[u], w);
@@ -128,15 +124,15 @@ bool bfs(int s, int t) {
 
 int max_flow2(int s, int t) {
     int flow = 0;
-    while (bfs(s, t)) {
-        int d = minflow[t];
-        for (int v = t; v != s) {
+    while (bfs(s, t)) {  // bfs找路
+        // 从t开始遍历沿着反图走到s
+        for (int v = t; v != s;) {
             int i = pre[v];
-            edge[i].weight -= d;
-            edge[i ^ 1].weight += d;
+            edge[i].weight -= minflow[t];
+            edge[i ^ 1].weight += minflow[t];
             v = edge[i ^ 1].to;
         }
-        flow += d;
+        flow += minflow[t];
     }
     return flow;
 }
@@ -151,29 +147,25 @@ struct Edge {
     int weight;
 };
 vector<Edge> edge;
-
 vector<int> head(N, -1);
-
-
-vector<int> level(N, -1);
-vector<int> cur(N, -1);
-
 void init_edge() {
     edge.clear();
     fill(head.begin(), head.end(), -1);
 }
 void add_edge(int u, int v, int w) {
+    // 正图
     edge.push_back({head[u], v, w});
     head[u] = edge.size() - 1;
-
     // 反图
     edge.push_back({head[v], u, 0});
     head[v] = edge.size() - 1;
 }
 
-
+vector<int> level(N, -1);  // 分层图
+vector<int> cur(N, -1);    // 当前弧优化，cur[u]表示遍历到哪条边
+// bfs找路，建立分层图，让dfs只允许走最短路
 bool bfs(int s, int t) {
-    fill(level.begin(), level.begin() + n, -1);
+    fill(level.begin(), level.end(), -1);
 
     queue<int> q;
     q.push(s);
@@ -186,7 +178,7 @@ bool bfs(int s, int t) {
         for (int i = head[u]; ~i; i = edge[i].next) {
             int v = edge[i].to;
             int w = edge[i].weight;
-
+            // 如果没有经过v或有剩余容量
             if (level[v] == -1 && w > 0) {
                 level[v] = level[u] + 1;
                 q.push(v);
@@ -195,20 +187,21 @@ bool bfs(int s, int t) {
     }
     return level[t] != -1;
 }
+// 按分层图找u到t的增广路
 int dfs(int u, int t, int flow) {
     if (u == t) {
-        return flow;
+        return flow;  // 找到增广路即返回
     }
-
-    visited[u] = true;
     for (int& i = cur[u]; ~i; i = edge[i].next) {
         int v = edge[i].to;
         int w = edge[i].weight;
+        // 只能走到下一层且有剩余容量的点
         if (level[v] == level[u] + 1 && w > 0) {
             int d = dfs(v, t, min(flow, w));
+            // 如果之后的v到t有最大流量d
             if (d > 0) {
-                edge[i].w -= d;
-                edge[i ^ 1].w += d;  // 反向边
+                edge[i].weight -= d;
+                edge[i ^ 1].weight += d;  // 反向边
                 return d;
             }
         }

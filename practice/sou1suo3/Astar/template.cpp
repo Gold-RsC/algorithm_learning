@@ -25,7 +25,7 @@ using namespace std;
 struct Edge {
     int v, w;
 };
-// dis=g[u]+w+h[v]
+// dis[v]=g[v]+h[v]
 struct Node {
     int dis, u;
     bool operator>(const Node& a) const {
@@ -33,14 +33,14 @@ struct Node {
     }
 };
 vector<Edge> edge[N];
-int dis[N];
+int g[N];
 bool vis[N];
 priority_queue<Node, vector<Node>, greater<Node>> pq;
 
 void Astar(int s) {
-    memset(dis, 0x3f, (n + 1) * sizeof(dis[0]));
+    memset(g, 0x3f, sizeof(g));
 
-    dis[s] = 0;
+    g[s] = 0;
 
     pq.push({h[0], s});
 
@@ -53,9 +53,9 @@ void Astar(int s) {
         vis[u] = 1;
         for (auto ed : edge[u]) {
             int v = ed.v, w = ed.w;
-            if (dis[v] > dis[u] + w) {
-                dis[v] = dis[u] + w;
-                pq.push({dis[v] + h[v], v});
+            if (g[v] > g[u] + w) {
+                g[v] = g[u] + w;
+                pq.push({g[v] + h[v], v});
             }
         }
     }

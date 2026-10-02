@@ -33,15 +33,15 @@ struct Node {
     }
 };
 vector<Edge> edge[N];
-int dis[N];
+int g[N];
 bool vis[N];
 priority_queue<Node, vector<Node>, greater<Node>> pq;
 
 int limit;
 bool IDAstar(int s) {
-    memset(dis, 0x3f, (n + 1) * sizeof(dis[0]));
+    memset(g, 0x3f, sizeof(g));
 
-    dis[s] = 0;
+    g[s] = 0;
 
     pq.push({h[0], s});
 
@@ -51,18 +51,19 @@ bool IDAstar(int s) {
         if (vis[u]) {
             continue;
         }
-        if (dis[u] + h[u] > limit) {
+        if (g[u] + h[u] > limit) {
             return false;
         }
         vis[u] = 1;
         for (auto ed : edge[u]) {
             int v = ed.v, w = ed.w;
-            if (dis[v] > dis[u] + w) {
-                dis[v] = dis[u] + w;
-                pq.push({dis[v] + h[v], v});
+            if (g[v] > g[u] + w) {
+                g[v] = g[u] + w;
+                pq.push({g[v] + h[v], v});
             }
         }
     }
+    return true;
 }
 
 void solve() {
