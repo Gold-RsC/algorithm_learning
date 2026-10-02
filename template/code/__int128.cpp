@@ -1,21 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <stack>
-#include <map>
-#include <set>
-#include <unordered_map>
-#include <unordered_set>
-#include <algorithm>
-#include <numeric>
-#include <string>
-#include <cmath>
-#include <climits>
-using namespace std;
-
-/**
- * @brief __int128的输入输出
- */
 // C风格
 __int128 read() {
     __int128 x = 0, f = 1;
@@ -68,12 +50,4 @@ ostream& operator<<(ostream& os, __int128 x) {
     }
     os << char(x % 10 + '0');
     return os;
-}
-
-signed main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    cout.tie(0);
-
-    return 0;
 }
