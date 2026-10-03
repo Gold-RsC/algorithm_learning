@@ -9,3 +9,6 @@
 .cph/
 
 bin/
+
+# Office 锁文件
+~$*
