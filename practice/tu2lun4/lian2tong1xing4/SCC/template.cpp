@@ -20,20 +20,18 @@ using namespace std;
 
 const int N = 1e5 + 5;
 
+
+/**
+ * @name Tarjan算法
+ * @details O(V+E)
+ */
 struct Edge {
     int next;
     int to;
     int weight;
 };
 vector<Edge> edge;
-
 vector<int> head(N, -1);
-
-/**
- * @name Tarjan算法
- * @details O(V+E)
- */
-
 
 int dfn[N];     // dfs搜索时，u被搜索到的timestamp。从根节点开始的一个路径上dfn[u]单调递增
 int low[N];     // 从u出发，dfs子树中，能追溯到的最早的仍在栈里的节点的dfn。从根节点开始的一个路径上low[u]单调不增
@@ -46,13 +44,12 @@ int SCC_size[N];  // 编号为i的SCC的大小
 bool in_stack[N];  // 节点u是否在栈中
 stack<int> s;      // 栈
 
-
 void tarjan(int u) {
     low[u] = dfn[u] = ++timestamp;
 
     s.push(u);
     in_stack[u] = true;
-
+    // 遍历一次u树
     for (int i = head[u]; ~i; i = edge[i].next) {
         int v = edge[i].to;
 
@@ -80,6 +77,13 @@ void tarjan(int u) {
         } while (u != v);
     }
 }
+void solve() {
+    for (int i = 1; i <= n; ++i) {
+        if (!dfn[i]) {
+            tarjan(i);
+        }
+    }
+}
 
 
 /**
@@ -91,13 +95,13 @@ vector<bool> vis;
 vector<int> edge2[N];  // 反向图
 vector<bool> vis2;
 
-vector<int> houxu;  // 后序遍历节点表
+vector<int> post_order;  // 后序遍历节点表
 
 int SCC_count;
 int SCC_id[N];
 int SCC_size[N];
 
-// 后序遍历
+// 正图上后序遍历，得到拓扑序
 void dfs1(int u) {
     vis[u] = true;
     for (auto v : edge[u]) {
@@ -105,10 +109,12 @@ void dfs1(int u) {
             dfs1(v);
         }
     }
-    houxu.push_back(u);
+    post_order.push_back(u);
 }
+// 反图上扩散
 void dfs2(int u) {
     SCC_id[u] = SCC_count;
+    ++SCC_size[SCC_count];
     for (auto v : edge2[u]) {
         if (!SCC_id[v]) {
             dfs2(v);
@@ -117,16 +123,16 @@ void dfs2(int u) {
 }
 
 void kosaraju() {
-
+    // 第一次dfs进行后序遍历
     for (int i = 1; i <= n; ++i) {
         if (!vis[i]) {
             dfs1(i);
         }
     }
     // 对后序遍历的表进行反向遍历
-    for (int i = n - 1; i >= 0; --i) {
-        int u = houxu[i];
-        // 如果还没开始标序号
+    for (auto it = post_order.rbegin(); it != post_order.rend(); ++it) {
+        int u = *it;
+        // 如果还没开始标SCC的序号
         if (!SCC_id[u]) {
             ++SCC_count;
             dfs2(u);
