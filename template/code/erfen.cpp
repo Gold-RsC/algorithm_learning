@@ -44,7 +44,14 @@ int bound(const vector<int>& a, int l, int r, int x) {
 /**
  * @note equal_range, lower_bound, upper_bound, binary_search
  */
-
+/**
+ * @note 在数组有序的情况下统计值域为[L,R]闭区间上的元素个数
+ */
+int func(int a[], int n, int L, int R) {
+    int left_idx  = lower_bound(a, a + n, L) - a;
+    int right_idx = upper_bound(a + left_idx, a + n, R) - a;
+    return right_idx - left_idx;
+}
 ////////////////////////////
 // 实数域上的二分
 ////////////////////////////
