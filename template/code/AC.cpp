@@ -8,7 +8,6 @@ struct Trie {
     int fail;
     int exist;
     bool visited;
-
 } t[N];
 
 // ½Úµã±àºÅ
@@ -18,11 +17,12 @@ int cnt;
 void insert(const char* s) {
     int u = 0;
     for (int i = 0; s[i]; ++i) {
-        int c = s[i] - 'a';
-        if (!t[u].son[c]) {
-            t[u].son[c] = ++cnt;
+        int c  = s[i] - 'a';
+        int& v = t[u].son[c];
+        if (!v) {
+            v = ++cnt;
         }
-        u = t[u].son[c];
+        u = v;
     }
     ++t[u].exist;
 }
@@ -39,12 +39,13 @@ void build() {
         int u = q.front();
         q.pop();
         for (int c = 0; c < 26; ++c) {
-            if (t[u].son[c]) {
-                t[t[u].son[c]].fail = t[t[u].fail].son[c];
-                q.push(t[u].son[c]);
+            int& v = t[u].son[c];
+            if (v) {
+                t[v].fail = t[t[u].fail].son[c];
+                q.push(v);
             }
             else {
-                t[u].son[c] = t[t[u].fail].son[c];
+                v = t[t[u].fail].son[c];
             }
         }
     }
