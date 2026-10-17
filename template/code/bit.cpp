@@ -54,3 +54,26 @@ int64_t mul(int64_t a, int64_t b, int64_t MOD) {
 int lowbit(int x) {
     return x & (-x);
 }
+
+/**
+ * @brief builtin系列
+ * @note
+ *   __builtin_clz(x)      : x二进制前导0个数，x=0时为未定义
+ *   __builtin_ctz(x)      : x二进制末尾连续0的个数，x=0时未定义
+ *   __builtin_ffs(x)      : x二进制末尾最后一个1的位置，编号从1开始，x=0时为0
+ *   __builtin_popcount(x) : x二进制中1的个数
+ */
+
+/**
+ * @brief 格雷码
+ */
+int g(int n) {
+    return n ^ (n >> 1);
+}
+int rev_g(int g) {
+    int n = 0;
+    for (; g; g >>= 1) {
+        n ^= g;
+    }
+    return n;
+}
