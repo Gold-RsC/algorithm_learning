@@ -56,7 +56,7 @@ int qpow(int a, int b, int MOD) {
 /**
  * @brief 单个模逆元
  */
-// 扩展欧几里得算法，适用于所有逆元存在O(log? min{a,MOD})
+// 扩展欧几里得算法，适用于所有逆元存在O(log min{a,MOD})
 void ex_gcd(int a, int b, int& x, int& y) {
     if (!b) {
         x = 1;
