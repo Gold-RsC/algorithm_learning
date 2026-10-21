@@ -50,6 +50,11 @@ struct SegTree {
         fill(d, d + 4 * N, 0);
         fill(lazy, lazy + 4 * N, 0);
     }
+    void push_up(Interval interval) {
+        if (interval.left != interval.right) {
+            d[interval.root] = d[interval.left_root()] + d[interval.right_root()];
+        }
+    }
     // 由a数组建树
     void build(Interval interval) {
         if (interval.left == interval.right) {
@@ -58,10 +63,8 @@ struct SegTree {
         }
         build(interval.left_interval());
         build(interval.right_interval());
-        // 节点结合操作
-        d[interval.root] = d[interval.left_root()] + d[interval.right_root()];
+        push_up(interval);
     }
-
     // 分发懒标记
     void push_down(Interval interval) {
         // 判断：有懒标记且不是叶子节点
@@ -111,8 +114,7 @@ struct SegTree {
         if (update_right > mid) {
             update(update_left, update_right, delta_val, interval.right_interval());
         }
-        // 更新节点
-        d[interval.root] = d[interval.left_root()] + d[interval.right_root()];
+        push_up(interval);
     }
 };
 SegTree seg;
