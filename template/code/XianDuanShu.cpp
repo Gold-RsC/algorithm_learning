@@ -6,7 +6,7 @@
 // 左闭右闭
 struct Interval {
     int left, right;  // 所管理a的区间
-    int root;         // 对应d的节点
+    int node;         // 对应d的节点
 
     int mid(void) const {
         return left + (right - left) / 2;
@@ -15,11 +15,11 @@ struct Interval {
         return right - left + 1;
     }
 
-    int left_root(void) const {
-        return root * 2;
+    int left_node(void) const {
+        return node * 2;
     }
-    int right_root(void) const {
-        return root * 2 + 1;
+    int right_node(void) const {
+        return node * 2 + 1;
     }
 
     int left_len(void) const {
@@ -30,12 +30,15 @@ struct Interval {
     }
 
     Interval left_interval(void) const {
-        return {left, mid(), root * 2};
+        return {left, mid(), node * 2};
     }
     Interval right_interval(void) const {
-        return {mid() + 1, right, root * 2 + 1};
+        return {mid() + 1, right, node * 2 + 1};
     }
 
+    bool is_leaf(void) const {
+        return left == right;
+    }
     bool is_in(int find_left, int find_right) const {
         return find_left <= left && find_right >= right;
     }
@@ -51,14 +54,14 @@ struct SegTree {
         fill(lazy, lazy + 4 * N, 0);
     }
     void push_up(Interval interval) {
-        if (interval.left != interval.right) {
-            d[interval.root] = d[interval.left_root()] + d[interval.right_root()];
+        if (!interval.is_leaf()) {
+            d[interval.node] = d[interval.left_node()] + d[interval.right_node()];
         }
     }
     // 由a数组建树
     void build(Interval interval) {
-        if (interval.left == interval.right) {
-            d[interval.root] = a[interval.left];
+        if (interval.is_leaf()) {
+            d[interval.node] = a[interval.left];
             return;
         }
         build(interval.left_interval());
@@ -68,22 +71,22 @@ struct SegTree {
     // 分发懒标记
     void push_down(Interval interval) {
         // 判断：有懒标记且不是叶子节点
-        if (lazy[interval.root] && interval.left < interval.right) {
+        if (lazy[interval.node] && !interval.is_leaf()) {
             // 应用懒标记
-            d[interval.left_root()]  = d[interval.left_root()] + lazy[interval.root] * interval.left_len();
-            d[interval.right_root()] = d[interval.right_root()] + lazy[interval.root] * interval.right_len();
+            d[interval.left_node()] += lazy[interval.node] * interval.left_len();
+            d[interval.right_node()] += lazy[interval.node] * interval.right_len();
             // 下发懒标记
-            lazy[interval.left_root()]  = lazy[interval.left_root()] + lazy[interval.root];
-            lazy[interval.right_root()] = lazy[interval.right_root()] + lazy[interval.root];
+            lazy[interval.left_node()] += lazy[interval.node];
+            lazy[interval.right_node()] += lazy[interval.node];
             // 清空懒标记
-            lazy[interval.root] = 0;
+            lazy[interval.node] = 0;
         }
     }
 
     // 区间查找(find_left==find_right时为单点查找)
     int query(int find_left, int find_right, Interval interval) {
         if (interval.is_in(find_left, find_right)) {
-            return d[interval.root];
+            return d[interval.node];
         }
         push_down(interval);
 
@@ -101,8 +104,8 @@ struct SegTree {
     // 区间更新(update_left==update_right时为单点更新)
     void update(int update_left, int update_right, int delta_val, Interval interval) {
         if (interval.is_in(update_left, update_right)) {
-            d[interval.root] += delta_val * interval.len();  // 更新节点
-            lazy[interval.root] += delta_val;                // 更新懒标记
+            d[interval.node] += delta_val * interval.len();  // 更新节点
+            lazy[interval.node] += delta_val;                // 更新懒标记
             return;
         }
         push_down(interval);
