@@ -36,10 +36,10 @@ struct Interval {
     int mid() const {
         return left + (right - left) / 2;
     }
-    int left_root() const {
+    int left_node() const {
         return root * 2;
     }
-    int right_root() const {
+    int right_node() const {
         return root * 2 + 1;
     }
     Interval left_interval() const {
@@ -76,16 +76,16 @@ void build(Interval interval) {
     build(interval.left_interval());
     build(interval.right_interval());
 
-    d[interval.root] = cal_plus(d[interval.left_root()], d[interval.right_root()]);
+    d[interval.root] = cal_plus(d[interval.left_node()], d[interval.right_node()]);
 }
 void push_down(Interval interval) {
     if (lazy[interval.root] && interval.left < interval.right) {
         int mid                 = interval.mid();
-        d[interval.left_root()] = lazy[interval.root] * ((mid - interval.left + 1) % k);
-        d[interval.right_root()] += lazy[interval.root] * (interval.right - mid);
+        d[interval.left_node()] = lazy[interval.root] * ((mid - interval.left + 1) % k);
+        d[interval.right_node()] += lazy[interval.root] * (interval.right - mid);
 
-        lazy[interval.left_root()] += lazy[interval.root];
-        lazy[interval.right_root()] += lazy[interval.root];
+        lazy[interval.left_node()] += lazy[interval.root];
+        lazy[interval.right_node()] += lazy[interval.root];
         lazy[interval.root] = 0;
     }
 }
