@@ -49,10 +49,10 @@ struct Interval {
     int len(void) const {
         return right - left + 1;
     }
-    int left_root(void) const {
+    int left_node(void) const {
         return root * 2;
     }
-    int right_root(void) const {
+    int right_node(void) const {
         return root * 2 + 1;
     }
 
@@ -64,10 +64,10 @@ struct Interval {
     }
 
     Interval left_interval(void) const {
-        return {left, mid(), left_root()};
+        return {left, mid(), left_node()};
     }
     Interval right_interval(void) const {
-        return {mid() + 1, right, right_root()};
+        return {mid() + 1, right, right_node()};
     }
 
     bool is_in(int find_left, int find_right) const {
@@ -86,7 +86,7 @@ void push_up(Interval interval) {
         len[interval.root] = 0;
     }
     else {
-        len[interval.root] = len[interval.left_root()] + len[interval.right_root()];
+        len[interval.root] = len[interval.left_node()] + len[interval.right_node()];
     }
 }
 void update(Interval interval, int find_left, int find_right, int k) {
