@@ -49,10 +49,44 @@ int64_t mul(int64_t a, int64_t b, int64_t MOD) {
  * (0,1),(2,3),(4,5),...构成变换
  */
 /**
- * @brief lowbit
+ * @brief 判断与检测
+ * @note
+ *   x |= (1u << i)       : 第i位置1
+ *   x &= ~(1u << i)      : 第i位置0
+ *   x ^= (1u << i)       : 第i位取反
+ *   (x >>i) & 1          : 取第i位
+ *   lowbit(x) = x & (-x) : 取最低位的1
+ *   x |= (x + 1)         : 把最低位0置1
+ *   x &= (x - 1)         : 把最低为1置0
  */
-int lowbit(int x) {
-    return x & (-x);
+
+/**
+ * @brief 集合操作
+ * @note
+ *   A | B    : 并
+ *   A & B    : 交
+ *   A & (~B) : 差
+ */
+/**
+ * @brief 枚举mask的所有子集
+ */
+void fun() {
+    for (int s = mask;; s = (s - 1) & mask) {
+
+        // do something
+
+        if (!s) {  // 0也是子集
+            break;
+        }
+    }
+}
+/**
+ * @brief 枚举mask的所有超集
+ */
+void fun() {
+    for (int s = mask; s < (1 << n); s = (s + 1) | mask) {
+        // do something
+    }
 }
 
 /**
