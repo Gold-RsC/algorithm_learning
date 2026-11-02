@@ -1,12 +1,10 @@
-const int N = 1e5 + 5;
 struct Edge {
     int v, w;
 };
-vector<int> edge[N];
-void init_edge() {
-    for (int i = 0; i < N; ++i) {
-        edge[i].clear();
-    }
+int n;
+vector<vector<int>> edge;
+void init_edge(int n) {
+    edge.assign(n + 1, vector<Edge>());
 }
 void add_edge(int u, int v, int w) {
     edge[u].push_back({v, w});

@@ -1,7 +1,7 @@
-const int N = 1e5 + 5;
-int graph[N][N];
-void init_edge() {
-    memset(graph, 0, sizeof(graph));
+vector<vector<int>> graph;
+int n;
+void init_edge(int n) {
+    graph.assign(n + 1, vector<int>(n + 1, 0));
 }
 void add_edge(int u, int v, int w) {
     graph[u][v] = w;
@@ -16,7 +16,7 @@ void dfs(int u) {
     }
     visited[u] = true;
     for (int v = 1; v <= n; ++v) {
-        if (graph[v]) {
+        if (graph[u][v]) {
             dfs(v);
         }
     }
