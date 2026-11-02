@@ -20,9 +20,7 @@ void beibao01() {
     //         dp01[i][j] = dp01[i - 1][j];
     //     }
     //     for (int j = a[i].w; j <= w; ++j) {
-    //         dp01[i][j] =
-    //             max(dp01[i - 1][j],
-    //                 dp01[i - 1][j - a[i].w] + a[i].v);
+    //         dp01[i][j] = max(dp01[i - 1][j], dp01[i - 1][j - a[i].w] + a[i].v);
     //     }
     // }
     // cout << dp01[n][w];
@@ -59,19 +57,16 @@ void beibaodc() {
     //     // begin
     //     if (a[i].c * a[i].w >= w) {
     //         for (int j = a[i].w; j <= w; ++j) {
-    //             dpdc[j] =
-    //                 max(dpdc[j], dpdc[j - a[i].w] +
-    //                 a[i].v);
+    //             dpdc[j] = max(dpdc[j], dpdc[j - a[i].w] + a[i].v);
     //         }
     //         continue;
     //     }
     //     // end
-    //     while (a[i].c--)
+    //     while (a[i].c--) {
     //         for (int j = w; j >= a[i].w; --j) {
-    //             dpdc[j] =
-    //                 max(dpdc[j], dpdc[j - a[i].w] +
-    //                 a[i].v);
+    //             dpdc[j] = max(dpdc[j], dpdc[j - a[i].w] + a[i].v);
     //         }
+    //     }
     // }
 
     // 法二：二进制优化
@@ -100,7 +95,6 @@ void beibaodc() {
             }
         }
     }
-
     cout << dpdc[w];
 }
 
@@ -120,7 +114,6 @@ void beibaowq() {
     for (int i = 1; i <= n; ++i) {
         cin >> a[i].w >> a[i].v;
     }
-
 
     for (int i = 1; i <= n; ++i) {
         for (int j = a[i].w; j <= w; ++j) {
