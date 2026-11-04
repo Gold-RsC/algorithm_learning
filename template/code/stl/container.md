@@ -2,20 +2,31 @@
 
 ### 速查
 
-| 容器                              | 底层                   | 随机访问   | 插入 / 删除              | 迭代器   |
-| --------------------------------- | ---------------------- | ---------- | ------------------------ | -------- |
-| `vector`                          | 连续数组               | O(1)       | 末尾均摊 O(1)，中间 O(n) | 随机访问 |
-| `deque`                           | 分段连续               | O(1)       | 两端 O(1)，中间 O(n)     | 随机访问 |
-| `list`                            | 双向链表               | 不支持     | O(1)\*                   | 双向     |
-| `forward_list`                    | 单向链表               | 不支持     | O(1)\*                   | 前向     |
-| `array`                           | 定长数组               | O(1)       | 不支持                   | 随机访问 |
-| `set` / `map`                     | 红黑树                 | 不支持     | O(log n)                 | 双向     |
-| `unordered_set` / `unordered_map` | 哈希表                 | 不支持     | 平均 O(1)，最坏 O(n)     | 前向     |
-| `stack` / `queue`                 | 适配器（默认 `deque`） | 不支持     | O(1)                     | 无       |
-| `priority_queue`                  | 堆                     | 仅 `top()` | O(log n)                 | 无       |
-| `bitset`                          | 定长位集               | 取位 O(1)  | 不支持                   | 无       |
-
+| 容器                                        | 底层                   | 随机访问   | 插入 / 删除              | 迭代器   |
+| ------------------------------------------- | ---------------------- | ---------- | ------------------------ | -------- |
+| `vector`                                    | 连续数组               | O(1)       | 末尾均摊 O(1)，中间 O(n) | 随机访问 |
+| `deque`                                     | 分段连续               | O(1)       | 两端 O(1)，中间 O(n)     | 随机访问 |
+| `list`                                      | 双向链表               | 不支持     | O(1)\*                   | 双向     |
+| `forward_list`                              | 单向链表               | 不支持     | O(1)\*                   | 前向     |
+| `array`                                     | 定长数组               | O(1)       | 不支持                   | 随机访问 |
+| `string`                                    | 连续字符数组           | O(1)       | 末尾均摊 O(1)，中间 O(n) | 随机访问 |
+| `set` / `map`                               | 红黑树                 | 不支持     | O(log n)                 | 双向     |
+| `multiset` / `multimap`                     | 红黑树                 | 不支持     | O(log n)                 | 双向     |
+| `unordered_set` / `unordered_map`           | 哈希表                 | 不支持     | 平均 O(1)，最坏 O(n)     | 前向     |
+| `unordered_multiset` / `unordered_multimap` | 哈希表                 | 不支持     | 平均 O(1)，最坏 O(n)     | 前向     |
+| `stack` / `queue`                           | 适配器（默认 `deque`） | 不支持     | O(1)                     | 无       |
+| `priority_queue`                            | 堆                     | 仅 `top()` | O(log n)                 | 无       |
+| `bitset`                                    | 定长位集               | 取位 O(1)  | 不支持                   | 无       |
 \* 已持有迭代器；找位置仍是 O(n)。
+
+### 通用
+
+- 顺序容器和关联容器都有 `size()`、`empty()`、`clear()`、`swap()`；`stack` / `queue` / `priority_queue` **没有** `clear()`。
+- `size()` 返回 `size_t`（无符号）。空容器时 `s.size() - 1` 回绕成极大值。
+- `at()` 越界抛 `std::out_of_range`；`operator[]` **不检查**。
+- `emplace` / `emplace_back` / `emplace_hint` 原地构造，省一次拷贝或移动。
+- `assign(n, val)` / `assign(first, last)`：重置为 n 个 val 或一段区间（`vector` / `deque` / `list` / `string`）。
+- `clear()` 是 O(n)（要析构元素）；`vector` 想连容量一起释放用 `shrink_to_fit()`。
 
 ### vector
 
@@ -36,6 +47,10 @@ iterator erase(const_iterator first, const_iterator last);
 void clear();                                        // O(n)
 void reserve(size_type n);                           // 只改 capacity，不改 size
 void resize(size_type n);                            // 改 size，多出的值初始化
+void assign(size_type n, const T& value);            // 重置为 n 个 value
+void assign(InputIt first, InputIt last);            // 重置为一段区间
+void shrink_to_fit();                                // 释放多余 capacity
+void swap(vector& other);                            // O(1)
 ```
 
 ```cpp
@@ -122,6 +137,72 @@ sort(a.begin(), a.end());            // 可直接传算法
 ```
 
 - 栈上分配，无动态分配；可整体比较和拷贝。
+
+### string
+
+```cpp
+size_type size() const;  size_type length() const;   // O(1)，两者等价
+bool empty() const;                                  // O(1)
+size_type capacity() const;
+void reserve(size_type n);                           // 预留，避免反复扩容
+void clear();                                        // O(n)
+
+// 查找：找不到返回 string::npos
+size_type find(const string& s, size_type pos = 0) const;
+size_type find(char c, size_type pos = 0) const;
+size_type rfind(const string& s, size_type pos = npos) const;
+
+string substr(size_type pos = 0, size_type len = npos) const;   // O(len)
+int compare(const string& s) const;                             // <0 / 0 / >0
+
+string& append(const string& s);
+string& insert(size_type pos, const string& s);
+string& erase(size_type pos = 0, size_type len = npos);
+string& replace(size_type pos, size_type len, const string& s);
+void push_back(char c);                              // C++11
+void pop_back();                                     // C++11
+
+const char* c_str() const;                           // 末尾带 '\0'
+const char* data() const;
+```
+
+```cpp
+string s = "hello world";
+
+size_t p = s.find("world");            // 6
+if (p != string::npos) {               // 必须判 npos
+    string t = s.substr(p, 5);         // "world"
+}
+
+s.replace(0, 5, "hi");                 // "hi world"
+s.erase(2, 1);                         // 删 1 个字符
+s += "!";                              // 追加
+s.push_back('?');                      // 追加单字符
+
+// 数值 <-> 字符串
+int       a = stoi("42");              // 失败抛 invalid_argument / out_of_range
+long long b = stoll("42");
+double    c = stod("3.14");
+string    d = to_string(123);          // "123"
+
+// 读一整行（含空格）
+string line;
+getline(cin, line);
+// cin >> x 之后紧跟 getline 会读到空行，先 cin.ignore()
+```
+
+- **`size()` 返回 `size_t`（无符号）**：空串时 `s.size() - 1` 回绕成极大值。
+
+```cpp
+for (int i = 0; i < s.size(); ++i)      // int 与无符号比较，有符号警告
+for (size_t i = 0; i < s.size(); ++i)   // 对
+```
+
+- `find` 找不到返回 `string::npos`（`size_t(-1)`），**不能用 `< 0` 判断**。
+- `substr(pos, len)`：`len` 超出范围自动截到末尾。
+- `c_str()` 指向内部缓冲区，**任何修改或析构后失效**。
+- `s = s + a + b` 会多次分配；循环拼接用 `s += x`，或先 `reserve`。
+- C++17 可用 `string_view` 做只读视图，避免拷贝。
 
 ### set / multiset
 

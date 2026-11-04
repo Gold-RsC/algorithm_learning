@@ -67,6 +67,43 @@ ostream_iterator<int> out(cout, " ");
 copy(v.begin(), v.end(), out);               // 空格分隔输出
 ```
 
+### 自由函数
+
+```cpp
+template<class C> auto begin(C& c)  -> decltype(c.begin());   // C++11
+template<class C> auto end(C& c)    -> decltype(c.end());
+template<class T, size_t N> T* begin(T (&a)[N]);              // 支持 C 数组
+template<class T, size_t N> T* end(T (&a)[N]);
+template<class C> auto size(const C& c) -> decltype(c.size());        // C++17
+template<class C> bool empty(const C& c);                            // C++17
+template<class C> auto data(C& c) -> decltype(c.data());             // C++17
+```
+
+```cpp
+int a[5] = {1, 2, 3, 4, 5};
+sort(begin(a), end(a));        // C 数组也能用 std::begin / std::end
+
+vector<int> v = {1, 2, 3};
+auto n = size(v);              // 3，C++17
+```
+
+- 泛型代码里用 `std::begin(c)` 而不是 `c.begin()`，这样能同时支持容器和裸数组。
+
+### 反向 / 移动迭代器
+
+```cpp
+reverse_iterator       make_reverse_iterator(It it);       // C++14
+move_iterator<It>      make_move_iterator(It it);          // C++11
+```
+
+```cpp
+// 反向遍历
+for (auto it = make_reverse_iterator(v.end()); it != make_reverse_iterator(v.begin()); ++it)
+
+// 移动而不是拷贝：元素被搬走，源区间之后不要再用
+vector<string> dst(make_move_iterator(src.begin()), make_move_iterator(src.end()));
+```
+
 ### 失效规则
 
 | 容器                                    | 插入                                                 | 删除                               |

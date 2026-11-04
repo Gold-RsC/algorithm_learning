@@ -69,6 +69,10 @@ template<class It> It max_element(It first, It last);
 template<class It> pair<It,It> minmax_element(It first, It last);
 template<class It> It adjacent_find(It first, It last);                          // 首个相邻相等
 template<class It> pair<It,It> mismatch(It first1, It last1, It first2);
+template<class I1, class I2> I1 search(I1 f1, I1 l1, I2 f2, I2 l2);         // 子序列首次出现
+template<class I1, class I2> I1 find_end(I1 f1, I1 l1, I2 f2, I2 l2);       // 子序列最后出现
+template<class It, class Sz, class T> It search_n(It first, It last, Sz n, const T& v);  // n 个连续 v
+template<class I1, class I2> bool equal(I1 f1, I1 l1, I2 f2);              // 两区间逐元素相等
 ```
 
 ```cpp
@@ -86,16 +90,25 @@ int mx = *max_element(v.begin(), v.end());   // 解引用才拿到值
 template<class In, class Out> Out copy(In first, In last, Out dst);
 template<class In, class Out, class Pred> Out copy_if(In first, In last, Out dst, Pred p);
 template<class In, class Out> Out move(In first, In last, Out dst);
+template<class B1, class B2> B2 copy_backward(B1 first, B1 last, B2 d_last);  // 从后往前拷，d_last 是目标末尾
+template<class B1, class B2> B2 move_backward(B1 first, B1 last, B2 d_last);
 template<class Out, class T> void fill(Out first, Out last, const T& value);
 template<class Out, class Size, class T> Out fill_n(Out first, Size n, const T& value);
 template<class In, class Out, class F> Out transform(In first, In last, Out dst, F f);
 template<class It, class T> void replace(It first, It last, const T& old, const T& nw);
+template<class It, class Pred, class T> void replace_if(It first, It last, Pred p, const T& nw);
+template<class It, class T> It remove(It first, It last, const T& value);  // **不真删**
 template<class It, class Pred> It remove_if(It first, It last, Pred p);   // **不真删**
 template<class It> It unique(It first, It last);                          // 只去相邻
+template<class Out, class F> void generate(Out first, Out last, F gen);   // 用 gen() 填充
+template<class Out, class Size, class F> Out generate_n(Out first, Size n, F gen);
 template<class It> void reverse(It first, It last);
 template<class It> It rotate(It first, It middle, It last);
 template<class It, class URBG> void shuffle(It first, It last, URBG&& g);
 template<class F1, class F2> void iter_swap(F1 a, F2 b);                  // 交换指向的元素
+template<class F1, class F2> F2 swap_ranges(F1 first, F1 last, F2 dst);   // 逐元素交换
+template<class T, class U = T> T exchange(T& obj, U&& new_val);           // C++14，返回旧值
+template<class In, class Out> Out unique_copy(In first, In last, Out dst);   // 去相邻后拷出
 ```
 
 ```cpp
@@ -128,6 +141,10 @@ template<class It, class T> T inner_product(It first1, It last1, It first2, T in
 template<class It, class T> void iota(It first, It last, T value);        // C++11
 template<class M, class N> common_type_t<M,N> gcd(M m, N n);              // C++17
 template<class M, class N> common_type_t<M,N> lcm(M m, N n);              // C++17
+template<class It, class T> T reduce(It first, It last, T init);          // C++17，可并行
+template<class It, class T, class Op> T reduce(It first, It last, T init, Op op);
+template<class It, class Out, class T> Out exclusive_scan(It first, It last, Out dst, T init);  // C++17
+template<class It, class Out, class T> Out inclusive_scan(It first, It last, Out dst, T init);  // C++17
 ```
 
 ```cpp
@@ -142,6 +159,28 @@ vector<int> idx(n);
 iota(idx.begin(), idx.end(), 0);                       // 0,1,2,...
 ```
 
+### 划分
+
+```cpp
+template<class It, class Pred> bool is_partitioned(It first, It last, Pred p);   // O(n)
+template<class It, class Pred> It partition(It first, It last, Pred p);          // O(n)，不稳定
+template<class It, class Pred> It stable_partition(It first, It last, Pred p);   // O(n log n) / 有额外空间时 O(n)
+template<class It, class Pred> It partition_point(It first, It last, Pred p);    // O(log n)，要求已划分
+```
+
+```cpp
+// 奇数在前、偶数在后
+auto mid = partition(v.begin(), v.end(), [](int x) { return x % 2 == 1; });
+
+// 返回第一段 [first, mid) 满足谓词，第二段不满足
+// partition_point 在已划分的区间上二分，别用 lower_bound
+auto p = partition_point(v.begin(), v.end(), [](int x) { return x % 2 == 1; });
+int odd = p - v.begin();
+```
+
+- `partition` 返回分界点：`[first, p)` 全为 true，`[p, last)` 全为 false。
+- `stable_partition` 保持相对顺序，代价更高。
+
 ### 集合操作（要求有序）
 
 ```cpp
@@ -151,6 +190,8 @@ template<class I1, class I2, class Out> Out set_difference(I1 f1, I1 l1, I2 f2, 
 template<class I1, class I2, class Out> Out set_symmetric_difference(I1 f1, I1 l1, I2 f2, I2 l2, Out dst);
 template<class I1, class I2> bool includes(I1 f1, I1 l1, I2 f2, I2 l2);   // l2 是否被 l1 包含
 template<class I1, class I2, class Out> Out merge(I1 f1, I1 l1, I2 f2, I2 l2, Out dst);
+template<class B1, class B2> void inplace_merge(B1 first, B1 middle, B1 last);   // 原地合并两段有序区间
+template<class I1, class I2> bool is_permutation(I1 f1, I1 l1, I2 f2);          // 是否为同一多重集
 ```
 
 ```cpp
@@ -206,7 +247,12 @@ template<class It, class Pred> bool all_of(It first, It last, Pred p);
 template<class It, class Pred> bool any_of(It first, It last, Pred p);
 template<class It, class Pred> bool none_of(It first, It last, Pred p);
 template<class It, class F> F for_each(It first, It last, F f);
+template<class It, class Size, class F> It for_each_n(It first, Size n, F f);   // C++17
+template<class T> const T& min(const T& a, const T& b);
+template<class T> const T& max(const T& a, const T& b);
+template<class T> pair<const T&, const T&> minmax(const T& a, const T& b);
 template<class T> const T& clamp(const T& v, const T& lo, const T& hi);   // C++17
+template<class I1, class I2> bool lexicographical_compare(I1 f1, I1 l1, I2 f2, I2 l2);  // 字典序
 ```
 
 ```cpp
