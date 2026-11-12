@@ -8,38 +8,38 @@ struct Interval {
     int left, right;  // 所管理a的区间
     int node;         // 对应d的节点
 
-    int mid(void) const {
+    inline int mid(void) const {
         return left + (right - left) / 2;
     }
-    int len(void) const {
+    inline int len(void) const {
         return right - left + 1;
     }
 
-    int left_node(void) const {
+    inline int left_node(void) const {
         return node * 2;
     }
-    int right_node(void) const {
+    inline int right_node(void) const {
         return node * 2 + 1;
     }
 
-    int left_len(void) const {
+    inline int left_len(void) const {
         return mid() - left + 1;
     }
-    int right_len(void) const {
+    inline int right_len(void) const {
         return right - mid();
     }
 
-    Interval left_interval(void) const {
+    inline Interval left_interval(void) const {
         return {left, mid(), node * 2};
     }
-    Interval right_interval(void) const {
+    inline Interval right_interval(void) const {
         return {mid() + 1, right, node * 2 + 1};
     }
 
-    bool is_leaf(void) const {
+    inline bool is_leaf(void) const {
         return left == right;
     }
-    bool is_in(int find_left, int find_right) const {
+    inline bool is_in(int find_left, int find_right) const {
         return find_left <= left && find_right >= right;
     }
 };
