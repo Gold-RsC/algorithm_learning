@@ -7,3 +7,6 @@
  * @brief hash函数
  * @note hash函数得尽量均匀，否则hash冲突会非常显著
  */
+/**
+ * @brief 贡献法
+ */
