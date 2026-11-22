@@ -9,6 +9,7 @@
 .cph/
 
 bin/
+duipai/
 
-# Office 锁文件
+# 需忽略文件
 ~$*
