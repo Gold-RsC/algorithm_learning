@@ -2,11 +2,11 @@
 #include <vector>
 #include <numeric>
 using namespace std;
-struct dsu {
-    vector<size_t> parent, size;
-    dsu(size_t _size)
-        : parent(_size),
-          size(_size, 1) {
+struct DSU {
+    vector<size_t> parent, size;  // 0不可用
+    DSU(size_t _size)
+        : parent(_size + 1),
+          size(_size + 1, 1) {
         iota(parent.begin(), parent.end(), 0);
     }
     // 普通查找
