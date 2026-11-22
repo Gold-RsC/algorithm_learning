@@ -20,22 +20,19 @@ using namespace std;
  * @name discrete
  * @brief 离散化
  */
-vector<int> discrete(vector<int> a) {
-    if (a.empty()) {
-        return {};
+int a[N];   // 原数组
+int rk[N];  // 离散后的数组
+int n;
+void discrete() {
+    vector<int> b(n + 1, 0);  // b[rk[a]]=a
+    for (int i = 1; i <= n; ++i) {
+        b[i] = a[i];
     }
-    sort(a.begin(), a.end());
-    a.erase(std::unique(a.begin(), a.end()), a.end());
-    vector<int> r;
-    r.push_back(a.front());
-    int last = a.front();
-    for (auto x : a) {
-        if (last != x) {
-            r.push_back(x);
-            last = x;
-        }
+    sort(b.begin() + 1, b.end());
+    b.erase(unique(b.begin() + 1, b.end()), b.end());
+    for (int i = 1; i <= n; ++i) {
+        rk[i] = lower_bound(b.begin() + 1, b.end(), a[i]) - b.begin();
     }
-    return r;
 }
 
 /**
@@ -108,8 +105,8 @@ int fapai_xunhuan(vector<int> a) {
 /**
  * @brief 求逆序对=>归并排序
  */
+// 归并排序
 int tmp[114514];
-
 int merge(int a[], int l, int r) {  // 左闭右开
     int mid = (l + r) / 2;
     int cnt = 0;
@@ -147,6 +144,46 @@ int merge_sort(int a[], int l, int r) {
 
     cnt += merge(a, l, r);
     return cnt;
+}
+// 树状数组
+int n;
+int a[N];   // 原数组
+int rk[N];  // 离散后的数组
+int t[N];   // 管理树状数组
+int lowbit(int x) {
+    return x & (-x);
+}
+void add(int i) {
+    for (; i <= n; i += lowbit(i)) {
+        t[i]++;
+    }
+}
+int presum(int i) {
+    int s = 0;
+    for (; i > 0; i -= lowbit(i)) {
+        s += t[i];
+    }
+    return s;
+}
+int query() {
+    // 离散化
+    vector<int> b(n + 1, 0);
+    for (int i = 1; i <= n; ++i) {
+        b[i] = a[i];
+    }
+    sort(b.begin() + 1, b.begin() + 1 + n);
+    b.erase(unique(b.begin() + 1, b.end()), b.end());
+    for (int i = 1; i <= n; ++i) {
+        rk[i] = lower_bound(b.begin() + 1, b.end(), a[i]) - b.begin();
+    }
+
+    // 逆序数
+    int ans = 0;
+    for (int i = n; i >= 1; --i) {
+        ans += presum(rk[i] - 1);
+        add(rk[i]);
+    }
+    return ans;
 }
 
 signed main() {
