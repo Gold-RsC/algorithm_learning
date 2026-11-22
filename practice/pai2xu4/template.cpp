@@ -171,7 +171,7 @@ int query() {
     for (int i = 1; i <= n; ++i) {
         b[i] = a[i];
     }
-    sort(b.begin() + 1, b.begin() + 1 + n);
+    sort(b.begin() + 1, b.end());
     b.erase(unique(b.begin() + 1, b.end()), b.end());
     for (int i = 1; i <= n; ++i) {
         rk[i] = lower_bound(b.begin() + 1, b.end(), a[i]) - b.begin();
