@@ -29,36 +29,41 @@ int lowbit(int x) {
     return x & (-x);
 }
 int a[N];
-int n;
-int c[N];  // 树状数组节点，c[i] 管理 (i - lowbit(i), i] 这段区间
-
-void build() {
-    for (int i = 1; i <= n; ++i) {
-        c[i] += a[i];
-        int j = i + lowbit(i);
-        if (j <= n) {
-            c[j] += c[i];
+struct BIT {
+    vector<int> c;  // c[i] 管理 (i - lowbit(i), i] 区间
+    int n;
+    BIT(int _n)
+        : c(_n + 1, 0),
+          n(_n) {
+    }
+    void build() {
+        for (int i = 1; i <= n; ++i) {
+            c[i] += a[i];
+            int j = i + lowbit(i);
+            if (j <= n) {
+                c[j] += c[i];
+            }
         }
     }
-}
-// 单点更新
-void add(int pos, int val) {
-    for (int i = pos; i <= n; i += lowbit(i)) {
-        c[i] += val;
+    // 单点更新
+    void add(int pos, int val) {
+        for (int i = pos; i <= n; i += lowbit(i)) {
+            c[i] += val;
+        }
     }
-}
-// 前缀和
-int presum(int pos) {
-    int res = 0;
-    for (int i = pos; i > 0; i -= lowbit(i)) {
-        res += c[i];
+    // 前缀和
+    int presum(int pos) {
+        int res = 0;
+        for (int i = pos; i > 0; i -= lowbit(i)) {
+            res += c[i];
+        }
+        return res;
     }
-    return res;
-}
-// 区间查询(左闭右闭)
-int query(int left, int right) {
-    return presum(right) - presum(left - 1);
-}
+    // 区间查询(左闭右闭)
+    int query(int left, int right) {
+        return presum(right) - presum(left - 1);
+    }
+};
 
 signed main() {
     ios::sync_with_stdio(false);
