@@ -49,7 +49,7 @@ struct CartesianTree {
         int top = 0;
         for (int i = 1; i <= n; ++i) {
             int k = top;
-            while (k && a[stk[k]] > a[i]) {
+            while (k && a[stk[k]] > a[i]) {  // Ð¡¸ù
                 --k;
             }
             if (k) {
