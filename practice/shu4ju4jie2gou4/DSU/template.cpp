@@ -22,16 +22,17 @@ struct DSU {
     //     parent[find(x)] = find(y);
     // }
     // 启发式合并
-    void unite(size_t x, size_t y) {
+    bool unite(size_t x, size_t y) {
         x = find(x), y = find(y);
         if (x == y) {
-            return;
+            return false;
         }
         if (size[x] < size[y]) {
             swap(x, y);
         }
         parent[y] = x;
         size[x] += size[y];
+        return true;
     }
 };
 int main() {
